@@ -1,23 +1,42 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import Login from './components/Login';
+import Dashboard from './components/Dashboard';
 import './App.css';
 
 function App() {
+  const [resident, setResident] = useState(null);
+  const [token, setToken] = useState(null);
+
+  useEffect(() => {
+    const savedToken = localStorage.getItem('residentToken');
+    const savedResident = localStorage.getItem('residentData');
+    if (savedToken && savedResident) {
+      setToken(savedToken);
+      setResident(JSON.parse(savedResident));
+    }
+  }, []);
+
+  const handleLogin = (token, residentData) => {
+    localStorage.setItem('residentToken', token);
+    localStorage.setItem('residentData', JSON.stringify(residentData));
+    setToken(token);
+    setResident(residentData);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('residentToken');
+    localStorage.removeItem('residentData');
+    setToken(null);
+    setResident(null);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!resident ? (
+        <Login onLogin={handleLogin} />
+      ) : (
+        <Dashboard resident={resident} token={token} onLogout={handleLogout} />
+      )}
     </div>
   );
 }
