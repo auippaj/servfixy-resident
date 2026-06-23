@@ -132,18 +132,20 @@ function FloorplanPicker({ onSelect, onSkip }) {
                 e.currentTarget.style.background = 'rgba(20,184,166,0)';
             }}
           >
-            <span style={{
-              fontSize: '11px',
-              fontWeight: '600',
-              color: '#0F6E56',
-              background: 'rgba(225,245,238,0.92)',
-              padding: '2px 7px',
-              borderRadius: '4px',
-              pointerEvents: 'none',
-              whiteSpace: 'nowrap'
-            }}>
-              {zone.label}
-            </span>
+            {selectedZone?.id === zone.id && (
+              <span style={{
+                fontSize: '11px',
+                fontWeight: '600',
+                color: '#0F6E56',
+                background: 'rgba(225,245,238,0.95)',
+                padding: '2px 7px',
+                borderRadius: '4px',
+                pointerEvents: 'none',
+                whiteSpace: 'nowrap'
+              }}>
+                {zone.label}
+              </span>
+            )}
           </div>
         ))}
 
