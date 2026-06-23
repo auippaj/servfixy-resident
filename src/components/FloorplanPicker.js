@@ -75,6 +75,8 @@ function FloorplanPicker({ onSelect, onSkip }) {
     });
   };
 
+  const isSelected = (zone) => selectedZone?.id === zone.id;
+
   return (
     <div style={{ marginBottom: '1.5rem' }}>
       <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '8px' }}>
@@ -89,8 +91,7 @@ function FloorplanPicker({ onSelect, onSkip }) {
           borderRadius: '12px',
           overflow: 'hidden',
           border: '1px solid #e2e8f0',
-          background: '#f5f3ee',
-          cursor: 'crosshair'
+          background: '#f5f3ee'
         }}
       >
         <img
@@ -99,7 +100,7 @@ function FloorplanPicker({ onSelect, onSkip }) {
           style={{ width: '100%', display: 'block', opacity: 0.92 }}
         />
 
-        {/* Zone overlays */}
+        {/* Zone overlays — no labels, just invisible tap targets */}
         {ZONES.map(zone => (
           <div
             key={zone.id}
@@ -112,45 +113,19 @@ function FloorplanPicker({ onSelect, onSkip }) {
               height: `${zone.h}%`,
               borderRadius: '6px',
               cursor: 'pointer',
-              background: selectedZone?.id === zone.id
+              background: isSelected(zone)
                 ? 'rgba(20, 184, 166, 0.28)'
-                : 'rgba(20, 184, 166, 0)',
-              outline: selectedZone?.id === zone.id
+                : 'transparent',
+              outline: isSelected(zone)
                 ? '2px solid #14B8A6'
                 : 'none',
-              transition: 'background 0.15s',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
+              WebkitTapHighlightColor: 'transparent'
             }}
-            onMouseEnter={e => {
-              if (selectedZone?.id !== zone.id && window.matchMedia('(hover: hover)').matches)
-                e.currentTarget.style.background = 'rgba(20,184,166,0.14)';
-            }}
-            onMouseLeave={e => {
-              if (selectedZone?.id !== zone.id && window.matchMedia('(hover: hover)').matches)
-                e.currentTarget.style.background = 'rgba(20,184,166,0)';
-            }}
-          >
-            {selectedZone?.id === zone.id && (
-              <span style={{
-                fontSize: '11px',
-                fontWeight: '600',
-                color: '#0F6E56',
-                background: 'rgba(225,245,238,0.95)',
-                padding: '2px 7px',
-                borderRadius: '4px',
-                pointerEvents: 'none',
-                whiteSpace: 'nowrap'
-              }}>
-                {zone.label}
-              </span>
-            )}
-          </div>
+          />
         ))}
 
-        {/* Drop pin */}
-        {pinPos && (
+        {/* Pin — shows room name before spot selected, spot name after */}
+        {pinPos && selectedZone && (
           <div style={{
             position: 'absolute',
             left: `${pinPos.x}%`,
@@ -180,18 +155,31 @@ function FloorplanPicker({ onSelect, onSkip }) {
               marginTop: '4px',
               whiteSpace: 'nowrap'
             }}>
-              {selectedSpot || selectedZone?.label}
+              {selectedSpot || selectedZone.label}
             </div>
           </div>
         )}
       </div>
 
+      {/* Selected room indicator */}
+      {selectedZone && (
+        <div style={{
+          marginTop: '10px',
+          fontSize: '13px',
+          color: '#0F6E56',
+          background: '#E1F5EE',
+          border: '1px solid #14B8A6',
+          borderRadius: '8px',
+          padding: '8px 12px',
+          fontWeight: '500'
+        }}>
+          📍 {selectedZone.label} — pick the specific spot below
+        </div>
+      )}
+
       {/* Spot picker */}
       {selectedZone && (
         <div style={{ marginTop: '12px' }}>
-          <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '8px' }}>
-            Specific spot in <strong>{selectedZone.label}</strong>:
-          </p>
           <div style={{
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
@@ -236,7 +224,8 @@ function FloorplanPicker({ onSelect, onSkip }) {
             padding: '12px',
             fontSize: '14px',
             fontWeight: '600',
-            cursor: selectedZone && selectedSpot ? 'pointer' : 'default'
+            cursor: selectedZone && selectedSpot ? 'pointer' : 'default',
+            WebkitTapHighlightColor: 'transparent'
           }}
         >
           Confirm Location
@@ -250,7 +239,8 @@ function FloorplanPicker({ onSelect, onSkip }) {
             padding: '12px 16px',
             fontSize: '13px',
             color: '#64748b',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            WebkitTapHighlightColor: 'transparent'
           }}
         >
           Skip
