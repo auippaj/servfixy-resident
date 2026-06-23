@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import FloorplanPicker from './FloorplanPicker';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -20,10 +21,22 @@ const TIME_OPTIONS = [
 
 function SubmitRequest({ token, resident, onSubmit }) {
   const [category, setCategory] = useState('');
+  const [locationData, setLocationData] = useState(null);
+  const [locationConfirmed, setLocationConfirmed] = useState(false);
   const [description, setDescription] = useState('');
   const [preferredTime, setPreferredTime] = useState('Any time — urgent');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const handleLocationSelect = (data) => {
+    setLocationData(data);
+    setLocationConfirmed(true);
+  };
+
+  const handleLocationSkip = () => {
+    setLocationData(null);
+    setLocationConfirmed(true);
+  };
 
   const handleSubmit = async () => {
     if (!category) { setError('Please select a category.'); return; }
@@ -37,7 +50,15 @@ function SubmitRequest({ token, resident, onSubmit }) {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ category, description, preferred_time: preferredTime })
+        body: JSON.stringify({
+          category,
+          description,
+          preferred_time: preferredTime,
+          location_room: locationData?.location_room || null,
+          location_spot: locationData?.location_spot || null,
+          location_pin_x: locationData?.location_pin_x || null,
+          location_pin_y: locationData?.location_pin_y || null
+        })
       });
       const data = await res.json();
       if (!res.ok) {
@@ -46,6 +67,8 @@ function SubmitRequest({ token, resident, onSubmit }) {
         return;
       }
       setCategory('');
+      setLocationData(null);
+      setLocationConfirmed(false);
       setDescription('');
       setPreferredTime('Any time — urgent');
       onSubmit(data.request, data.rvc_code);
@@ -80,7 +103,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
           {CATEGORIES.map(cat => (
             <div
               key={cat.label}
-              onClick={() => setCategory(cat.label)}
+              onClick={() => { setCategory(cat.label); setLocationConfirmed(false); setLocationData(null); }}
               style={{
                 border: category === cat.label ? '1.5px solid #14B8A6' : '1px solid #e5e7eb',
                 background: category === cat.label ? '#e1f5ee' : '#f9fafb',
@@ -100,37 +123,73 @@ function SubmitRequest({ token, resident, onSubmit }) {
         </div>
       </div>
 
-      {/* Description */}
-      <div>
-        <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>Describe the problem</label>
-        <textarea
-          value={description}
-          onChange={e => setDescription(e.target.value)}
-          placeholder="Tell us what's happening..."
-          style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: '8px', padding: '9px 12px', fontSize: '13px', height: '80px', resize: 'none' }}
-        />
-      </div>
+      {/* Floorplan picker — shown once category is selected */}
+      {category && !locationConfirmed && (
+        <div>
+          <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '6px' }}>
+            Where in your unit?
+          </label>
+          <FloorplanPicker
+            onSelect={handleLocationSelect}
+            onSkip={handleLocationSkip}
+          />
+        </div>
+      )}
 
-      {/* Preferred time */}
-      <div>
-        <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>Best time for us to come?</label>
-        <select
-          value={preferredTime}
-          onChange={e => setPreferredTime(e.target.value)}
-          style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: '8px', padding: '9px 12px', fontSize: '13px' }}
+      {/* Location confirmed summary */}
+      {locationConfirmed && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: locationData ? '#E1F5EE' : '#f9fafb', border: `1px solid ${locationData ? '#14B8A6' : '#e5e7eb'}`, borderRadius: '8px', padding: '10px 12px' }}>
+          <div style={{ fontSize: '13px', color: locationData ? '#0F6E56' : '#6b7280' }}>
+            {locationData
+              ? `📍 ${locationData.location_room} — ${locationData.location_spot}`
+              : '📍 No location selected'}
+          </div>
+          <button
+            onClick={() => { setLocationConfirmed(false); setLocationData(null); }}
+            style={{ background: 'none', border: 'none', fontSize: '12px', color: '#6b7280', cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            Change
+          </button>
+        </div>
+      )}
+
+      {/* Description — only shown after location step is resolved */}
+      {locationConfirmed && (
+        <div>
+          <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>Describe the problem</label>
+          <textarea
+            value={description}
+            onChange={e => setDescription(e.target.value)}
+            placeholder="Tell us what's happening..."
+            style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: '8px', padding: '9px 12px', fontSize: '13px', height: '80px', resize: 'none', boxSizing: 'border-box' }}
+          />
+        </div>
+      )}
+
+      {/* Preferred time — only shown after location step is resolved */}
+      {locationConfirmed && (
+        <div>
+          <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>Best time for us to come?</label>
+          <select
+            value={preferredTime}
+            onChange={e => setPreferredTime(e.target.value)}
+            style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: '8px', padding: '9px 12px', fontSize: '13px' }}
+          >
+            {TIME_OPTIONS.map(t => <option key={t}>{t}</option>)}
+          </select>
+        </div>
+      )}
+
+      {/* Submit — only shown after location step is resolved */}
+      {locationConfirmed && (
+        <button
+          onClick={handleSubmit}
+          disabled={loading}
+          style={{ width: '100%', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: '10px', padding: '12px', fontSize: '14px', fontWeight: '500', opacity: loading ? 0.7 : 1, cursor: loading ? 'default' : 'pointer' }}
         >
-          {TIME_OPTIONS.map(t => <option key={t}>{t}</option>)}
-        </select>
-      </div>
-
-      {/* Submit */}
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        style={{ width: '100%', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: '10px', padding: '12px', fontSize: '14px', fontWeight: '500', opacity: loading ? 0.7 : 1 }}
-      >
-        {loading ? 'Submitting...' : 'Submit request →'}
-      </button>
+          {loading ? 'Submitting...' : 'Submit request →'}
+        </button>
+      )}
 
       <div style={{ fontSize: '11px', color: '#9ca3af', textAlign: 'center' }}>
         We'll confirm within 30 minutes and send your verification code.
