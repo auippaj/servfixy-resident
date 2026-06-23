@@ -55,6 +55,8 @@ function Dashboard({ resident, token, onLogout }) {
     fetchRequests();
   };
 
+  const [showRequests, setShowRequests] = useState(false);
+
   const openRequests = requests.filter(r => !['Completed', 'Closed'].includes(r.status));
   const pastRequests = requests.filter(r => ['Completed', 'Closed'].includes(r.status));
 
@@ -104,45 +106,58 @@ function Dashboard({ resident, token, onLogout }) {
         <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: '1rem' }}>
 
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-              <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Active request</div>
-              {openRequests.length > 1 && (
-                <div style={{ fontSize: '12px', color: '#6b7280' }}>{openRequests.length} open</div>
-              )}
-            </div>
-
-            {loading ? (
-              <div style={{ background: '#fff', borderRadius: '12px', padding: '2rem', textAlign: 'center', color: '#9ca3af', fontSize: '13px', border: '1px solid #e5e7eb' }}>
-                Loading...
+            <button
+              onClick={() => setShowRequests(!showRequests)}
+              style={{ width: '100%', background: '#1B3A6B', border: 'none', borderRadius: '12px', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', marginBottom: '10px' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '18px' }}>📋</span>
+                <span style={{ color: '#fff', fontSize: '14px', fontWeight: '500' }}>My Requests</span>
+                {openRequests.length > 0 && (
+                  <span style={{ background: '#14B8A6', color: '#fff', borderRadius: '10px', fontSize: '11px', fontWeight: 'bold', padding: '2px 8px' }}>
+                    {openRequests.length} active
+                  </span>
+                )}
               </div>
-            ) : openRequests.length === 0 ? (
-              <div style={{ background: '#fff', borderRadius: '12px', padding: '2rem', textAlign: 'center', border: '1px solid #e5e7eb' }}>
-                <div style={{ fontSize: '13px', color: '#6b7280' }}>No active requests</div>
-                <div style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>Submit a new request to get started.</div>
-              </div>
-            ) : (
-              openRequests.map(r => (
-                <RequestCard
-                  key={r.id}
-                  request={r}
-                  active={activeRequest && activeRequest.id === r.id}
-                  onClick={() => setActiveRequest(r)}
-                />
-              ))
-            )}
+              <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '18px' }}>{showRequests ? '▲' : '▼'}</span>
+            </button>
 
-            {pastRequests.length > 0 && (
-              <div style={{ marginTop: '1.5rem' }}>
-                <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '10px' }}>Past requests</div>
-                {pastRequests.map(r => (
-                  <RequestCard
-                    key={r.id}
-                    request={r}
-                    active={activeRequest && activeRequest.id === r.id}
-                    onClick={() => setActiveRequest(r)}
-                    past
-                  />
-                ))}
+            {showRequests && (
+              <div>
+                {loading ? (
+                  <div style={{ background: '#fff', borderRadius: '12px', padding: '2rem', textAlign: 'center', color: '#9ca3af', fontSize: '13px', border: '1px solid #e5e7eb' }}>
+                    Loading...
+                  </div>
+                ) : openRequests.length === 0 ? (
+                  <div style={{ background: '#fff', borderRadius: '12px', padding: '2rem', textAlign: 'center', border: '1px solid #e5e7eb' }}>
+                    <div style={{ fontSize: '13px', color: '#6b7280' }}>No active requests</div>
+                    <div style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>Submit a new request to get started.</div>
+                  </div>
+                ) : (
+                  openRequests.map(r => (
+                    <RequestCard
+                      key={r.id}
+                      request={r}
+                      active={activeRequest && activeRequest.id === r.id}
+                      onClick={() => setActiveRequest(r)}
+                    />
+                  ))
+                )}
+
+                {pastRequests.length > 0 && (
+                  <div style={{ marginTop: '1.5rem' }}>
+                    <div style={{ fontSize: '14px', fontWeight: '500', color: '#374151', marginBottom: '10px' }}>Past requests</div>
+                    {pastRequests.map(r => (
+                      <RequestCard
+                        key={r.id}
+                        request={r}
+                        active={activeRequest && activeRequest.id === r.id}
+                        onClick={() => setActiveRequest(r)}
+                        past
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
