@@ -27,118 +27,8 @@ function SubmitRequest({ token, resident, onSubmit }) {
   const [preferredTime, setPreferredTime] = useState('Any time — urgent');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const startListening = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.onstart = () => setListening(true);
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
-    };
-    recognition.onerror = () => { setListening(false); };
-    recognition.onend = () => setListening(false);
-    recognition.start();
-  };
-  const startListening = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.onstart = () => setListening(true);
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
-    };
-    recognition.onerror = () => { setListening(false); };
-    recognition.onend = () => setListening(false);
-    recognition.start();
-  };
-  const startListening = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.onstart = () => setListening(true);
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
-    };
-    recognition.onerror = () => { setListening(false); };
-    recognition.onend = () => setListening(false);
-    recognition.start();
-  };
-  const startListening = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.onstart = () => setListening(true);
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
-    };
-    recognition.onerror = () => { setListening(false); };
-    recognition.onend = () => setListening(false);
-    recognition.start();
-  };
-  const startListening = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.onstart = () => setListening(true);
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
-    };
-    recognition.onerror = () => { setListening(false); };
-    recognition.onend = () => setListening(false);
-    recognition.start();
-  };
-  const startListening = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.onstart = () => setListening(true);
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
-    };
-    recognition.onerror = () => { setListening(false); };
-    recognition.onend = () => setListening(false);
-    recognition.start();
-  };
-  const startListening = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.onstart = () => setListening(true);
-    recognition.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
-    };
-    recognition.onerror = () => { setListening(false); };
-    recognition.onend = () => setListening(false);
-    recognition.start();
-  };
+  const [listening, setListening] = useState(false);
+
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
@@ -216,7 +106,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
         </div>
       )}
 
-      {/* Unit number (read only) */}
       <div>
         <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>Unit number</label>
         <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '9px 12px', fontSize: '13px', color: '#6b7280', background: '#f9fafb' }}>
@@ -224,7 +113,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
         </div>
       </div>
 
-      {/* Category */}
       <div>
         <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '6px' }}>What's the issue?</label>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px' }}>
@@ -251,7 +139,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
         </div>
       </div>
 
-      {/* Floorplan picker — shown once category is selected */}
       {category && !locationConfirmed && (
         <div>
           <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '6px' }}>
@@ -264,7 +151,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
         </div>
       )}
 
-      {/* Location confirmed summary */}
       {locationConfirmed && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: locationData ? '#E1F5EE' : '#f9fafb', border: `1px solid ${locationData ? '#14B8A6' : '#e5e7eb'}`, borderRadius: '8px', padding: '10px 12px' }}>
           <div style={{ fontSize: '13px', color: locationData ? '#0F6E56' : '#6b7280' }}>
@@ -281,7 +167,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
         </div>
       )}
 
-      {/* Description — only shown after location step is resolved */}
       {locationConfirmed && (
         <div>
           <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>Describe the problem</label>
@@ -302,7 +187,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
         </div>
       )}
 
-      {/* Preferred time — only shown after location step is resolved */}
       {locationConfirmed && (
         <div>
           <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>Best time for us to come?</label>
@@ -316,7 +200,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
         </div>
       )}
 
-      {/* Submit — only shown after location step is resolved */}
       {locationConfirmed && (
         <button
           onClick={handleSubmit}
