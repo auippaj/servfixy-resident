@@ -45,6 +45,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
   const [error, setError] = useState('');
   const [listening, setListening] = useState(false);
   const [photos, setPhotos] = useState([]);
+  const [phone, setPhone] = useState(resident.phone || '');
 
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -105,7 +106,8 @@ function SubmitRequest({ token, resident, onSubmit }) {
           location_room: locationData?.location_room || null,
           location_spot: locationData?.location_spot || null,
           location_pin_x: locationData?.location_pin_x || null,
-          location_pin_y: locationData?.location_pin_y || null
+          location_pin_y: locationData?.location_pin_y || null,
+          resident_phone: phone || null
         })
       });
       const data = await res.json();
@@ -164,6 +166,19 @@ function SubmitRequest({ token, resident, onSubmit }) {
         <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '9px 12px', fontSize: '13px', color: '#6b7280', background: '#f9fafb' }}>
           {resident.unit_number} — {resident.property_name}
         </div>
+      </div>
+
+      <div>
+        <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>
+          Mobile number <span style={{ fontWeight: '400', color: '#9ca3af' }}>(for SMS updates)</span>
+        </label>
+        <input
+          type="tel"
+          value={phone}
+          onChange={e => setPhone(e.target.value)}
+          placeholder="+1 (555) 000-0000"
+          style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: '8px', padding: '9px 12px', fontSize: '13px', boxSizing: 'border-box' }}
+        />
       </div>
 
       <div>
