@@ -252,7 +252,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
               <div key={i} style={{ position: 'relative', width: '72px', height: '72px' }}>
                 <img
                   src={URL.createObjectURL(photo)}
-                  alt={`photo ${i + 1}`}
+                  alt={`attachment ${i + 1}`}
                   style={{ width: '72px', height: '72px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #e5e7eb' }}
                 />
                 <button
