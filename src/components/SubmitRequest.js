@@ -12,6 +12,7 @@ const uploadPhoto = async (file, requestId, index) => {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'apikey': SUPABASE_ANON_KEY,
       'Content-Type': file.type,
       'x-upsert': 'true'
     },
