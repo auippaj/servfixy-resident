@@ -27,6 +27,150 @@ function SubmitRequest({ token, resident, onSubmit }) {
   const [preferredTime, setPreferredTime] = useState('Any time — urgent');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [listening, setListening] = useState(false);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = () => setListening(true);
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
+    };
+    recognition.onerror = () => { setListening(false); };
+    recognition.onend = () => setListening(false);
+    recognition.start();
+  };
+  const [listening, setListening] = useState(false);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = () => setListening(true);
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
+    };
+    recognition.onerror = () => { setListening(false); };
+    recognition.onend = () => setListening(false);
+    recognition.start();
+  };
+  const [listening, setListening] = useState(false);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = () => setListening(true);
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
+    };
+    recognition.onerror = () => { setListening(false); };
+    recognition.onend = () => setListening(false);
+    recognition.start();
+  };
+  const [listening, setListening] = useState(false);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = () => setListening(true);
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
+    };
+    recognition.onerror = () => { setListening(false); };
+    recognition.onend = () => setListening(false);
+    recognition.start();
+  };
+  const [listening, setListening] = useState(false);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = () => setListening(true);
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
+    };
+    recognition.onerror = () => { setListening(false); };
+    recognition.onend = () => setListening(false);
+    recognition.start();
+  };
+  const [listening, setListening] = useState(false);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = () => setListening(true);
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
+    };
+    recognition.onerror = () => { setListening(false); };
+    recognition.onend = () => setListening(false);
+    recognition.start();
+  };
+  const [listening, setListening] = useState(false);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = () => setListening(true);
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
+    };
+    recognition.onerror = () => { setListening(false); };
+    recognition.onend = () => setListening(false);
+    recognition.start();
+  };
+  const [listening, setListening] = useState(false);
+
+  const startListening = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.onstart = () => setListening(true);
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setDescription(prev => prev ? prev + ' ' + transcript : transcript);
+    };
+    recognition.onerror = () => { setListening(false); };
+    recognition.onend = () => setListening(false);
+    recognition.start();
+  };
 
   const handleLocationSelect = (data) => {
     setLocationData(data);
@@ -163,6 +307,14 @@ function SubmitRequest({ token, resident, onSubmit }) {
             placeholder="Tell us what's happening..."
             style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: '8px', padding: '9px 12px', fontSize: '13px', height: '80px', resize: 'none', boxSizing: 'border-box' }}
           />
+          <button
+            onClick={startListening}
+            disabled={listening}
+            style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '8px', background: listening ? '#fef2f2' : '#f3f4f6', border: `1px solid ${listening ? '#fca5a5' : '#d1d5db'}`, borderRadius: '8px', padding: '8px 14px', fontSize: '13px', color: listening ? '#991b1b' : '#374151', cursor: listening ? 'default' : 'pointer', width: '100%', justifyContent: 'center' }}
+          >
+            <span style={{ fontSize: '16px' }}>{listening ? '🔴' : '🎙️'}</span>
+            {listening ? 'Listening...' : 'Tap to speak'}
+          </button>
         </div>
       )}
 
