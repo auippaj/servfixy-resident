@@ -2,6 +2,24 @@ import React, { useState } from 'react';
 import FloorplanPicker from './FloorplanPicker';
 
 const API_URL = process.env.REACT_APP_API_URL;
+const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
+
+const uploadPhoto = async (file, requestId, index) => {
+  const ext = file.name.split('.').pop() || 'jpg';
+  const path = `${requestId}/${index}.${ext}`;
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/request-photos/${path}`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'Content-Type': file.type,
+      'x-upsert': 'true'
+    },
+    body: file
+  });
+  if (!res.ok) throw new Error('Photo upload failed');
+  return `${SUPABASE_URL}/storage/v1/object/public/request-photos/${path}`;
+};
 
 const CATEGORIES = [
   { label: 'HVAC', icon: '❄️' },
@@ -28,6 +46,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [listening, setListening] = useState(false);
+  const [photos, setPhotos] = useState([]);
 
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -44,6 +63,19 @@ function SubmitRequest({ token, resident, onSubmit }) {
     recognition.onerror = () => { setListening(false); };
     recognition.onend = () => setListening(false);
     recognition.start();
+  };
+
+  const handlePhotoAdd = (e) => {
+    const files = Array.from(e.target.files);
+    setPhotos(prev => {
+      const combined = [...prev, ...files];
+      return combined.slice(0, 3);
+    });
+    e.target.value = '';
+  };
+
+  const handlePhotoRemove = (index) => {
+    setPhotos(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleLocationSelect = (data) => {
@@ -84,11 +116,34 @@ function SubmitRequest({ token, resident, onSubmit }) {
         setLoading(false);
         return;
       }
+
+      // Upload photos if any
+      if (photos.length > 0) {
+        try {
+          const requestId = data.request.id;
+          const photoUrls = await Promise.all(
+            photos.map((file, i) => uploadPhoto(file, requestId, i))
+          );
+          await fetch(`${API_URL}/api/service-requests/${requestId}/photos`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ photo_urls: photoUrls })
+          });
+        } catch (photoErr) {
+          console.error('Photo upload error:', photoErr);
+          // Non-blocking — ticket is already created, don't fail the submission
+        }
+      }
+
       setCategory('');
       setLocationData(null);
       setLocationConfirmed(false);
       setDescription('');
       setPreferredTime('Any time — urgent');
+      setPhotos([]);
       onSubmit(data.request, data.rvc_code);
     } catch (err) {
       setError('Could not connect to server.');
@@ -184,6 +239,38 @@ function SubmitRequest({ token, resident, onSubmit }) {
             <span style={{ fontSize: '16px' }}>{listening ? '🔴' : '🎙️'}</span>
             {listening ? 'Listening...' : 'Tap to speak'}
           </button>
+        </div>
+      )}
+
+      {locationConfirmed && (
+        <div>
+          <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '6px' }}>
+            Add photos <span style={{ fontWeight: '400', color: '#9ca3af' }}>(optional, up to 3)</span>
+          </label>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            {photos.map((photo, i) => (
+              <div key={i} style={{ position: 'relative', width: '72px', height: '72px' }}>
+                <img
+                  src={URL.createObjectURL(photo)}
+                  alt={`photo ${i + 1}`}
+                  style={{ width: '72px', height: '72px', objectFit: 'cover', borderRadius: '8px', border: '1px solid #e5e7eb' }}
+                />
+                <button
+                  onClick={() => handlePhotoRemove(i)}
+                  style={{ position: 'absolute', top: '-6px', right: '-6px', background: '#ef4444', color: '#fff', border: 'none', borderRadius: '50%', width: '18px', height: '18px', fontSize: '11px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1 }}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            {photos.length < 3 && (
+              <label style={{ width: '72px', height: '72px', border: '1.5px dashed #d1d5db', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '11px', color: '#9ca3af', gap: '4px' }}>
+                <span style={{ fontSize: '22px' }}>📷</span>
+                Add
+                <input type="file" accept="image/*" multiple capture="environment" onChange={handlePhotoAdd} style={{ display: 'none' }} />
+              </label>
+            )}
+          </div>
         </div>
       )}
 
