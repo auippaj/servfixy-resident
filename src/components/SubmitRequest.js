@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import FloorplanPicker from './FloorplanPicker';
 
 const API_URL = process.env.REACT_APP_API_URL;
-const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
-const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
+
 
 const uploadPhoto = async (file, requestId, index, token) => {
   const formData = new FormData();
