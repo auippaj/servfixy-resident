@@ -5,21 +5,19 @@ const API_URL = process.env.REACT_APP_API_URL;
 const SUPABASE_URL = process.env.REACT_APP_SUPABASE_URL;
 const SUPABASE_ANON_KEY = process.env.REACT_APP_SUPABASE_ANON_KEY;
 
-const uploadPhoto = async (file, requestId, index) => {
-  const ext = file.name.split('.').pop() || 'jpg';
-  const path = `${requestId}/${index}.${ext}`;
-  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/request-photos/${path}`, {
+const uploadPhoto = async (file, requestId, index, token) => {
+  const formData = new FormData();
+  formData.append('photo', file);
+  formData.append('requestId', requestId);
+  formData.append('index', index);
+  const res = await fetch(`${API_URL}/api/service-requests/${requestId}/upload-photo`, {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-      'apikey': SUPABASE_ANON_KEY,
-      'Content-Type': file.type,
-      'x-upsert': 'true'
-    },
-    body: file
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData
   });
   if (!res.ok) throw new Error('Photo upload failed');
-  return `${SUPABASE_URL}/storage/v1/object/public/request-photos/${path}`;
+  const data = await res.json();
+  return data.url;
 };
 
 const CATEGORIES = [
@@ -123,7 +121,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
         try {
           const requestId = data.request.id;
           const photoUrls = await Promise.all(
-            photos.map((file, i) => uploadPhoto(file, requestId, i))
+            photos.map((file, i) => uploadPhoto(file, requestId, i, token))
           );
           await fetch(`${API_URL}/api/service-requests/${requestId}/photos`, {
             method: 'POST',
