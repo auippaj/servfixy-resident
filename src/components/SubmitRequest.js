@@ -27,8 +27,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
   const [preferredTime, setPreferredTime] = useState('Any time — urgent');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [listening, setListening] = useState(false);
-
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
@@ -45,8 +43,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
     recognition.onend = () => setListening(false);
     recognition.start();
   };
-  const [listening, setListening] = useState(false);
-
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
@@ -63,8 +59,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
     recognition.onend = () => setListening(false);
     recognition.start();
   };
-  const [listening, setListening] = useState(false);
-
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
@@ -81,8 +75,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
     recognition.onend = () => setListening(false);
     recognition.start();
   };
-  const [listening, setListening] = useState(false);
-
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
@@ -99,8 +91,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
     recognition.onend = () => setListening(false);
     recognition.start();
   };
-  const [listening, setListening] = useState(false);
-
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
@@ -117,8 +107,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
     recognition.onend = () => setListening(false);
     recognition.start();
   };
-  const [listening, setListening] = useState(false);
-
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
@@ -135,8 +123,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
     recognition.onend = () => setListening(false);
     recognition.start();
   };
-  const [listening, setListening] = useState(false);
-
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
@@ -153,8 +139,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
     recognition.onend = () => setListening(false);
     recognition.start();
   };
-  const [listening, setListening] = useState(false);
-
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) { setError('Voice input not supported on this browser.'); return; }
