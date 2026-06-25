@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import SubmitRequest from './SubmitRequest';
 import RequestCard from './RequestCard';
@@ -56,6 +56,27 @@ function Dashboard({ resident, token, onLogout }) {
   };
 
   const [showRequests, setShowRequests] = useState(false);
+  const [videoRoom, setVideoRoom] = useState(null);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const handleVideoCall = async (e) => {
+      const { requestId } = e.detail;
+      try {
+        const res = await fetch(`${API_URL}/api/video/token`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ serviceRequestId: requestId, techId: 'resident', techName: resident.name })
+        });
+        const data = await res.json();
+        setVideoRoom({ token: data.token, roomName: data.roomName, requestId });
+      } catch (err) {
+        alert('Could not connect to video call.');
+      }
+    };
+    window.addEventListener('resident-video-call', handleVideoCall);
+    return () => window.removeEventListener('resident-video-call', handleVideoCall);
+  }, [token, resident.name]);
 
   const openRequests = requests.filter(r => !['Completed', 'Closed'].includes(r.status));
   const pastRequests = requests.filter(r => ['Completed', 'Closed'].includes(r.status));
@@ -169,8 +190,69 @@ function Dashboard({ resident, token, onLogout }) {
 
         </div>
       </div>
+
+      {/* Resident video call screen */}
+      {videoRoom && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: '#0f1f3d', zIndex: 9999, display: 'flex', flexDirection: 'column' }}>
+          <div style={{ background: '#1B3A6B', padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ color: '#fff', fontWeight: '700', fontSize: '15px' }}>📹 Video Call — Your Technician</span>
+            <button onClick={() => setVideoRoom(null)} style={{ background: '#ef4444', border: 'none', borderRadius: '8px', color: '#fff', padding: '8px 16px', fontWeight: '700', cursor: 'pointer' }}>End Call</button>
+          </div>
+          <ResidentVideoCall token={videoRoom.token} roomName={videoRoom.roomName} onHangUp={() => setVideoRoom(null)} />
+        </div>
+      )}
     </div>
   );
 }
+function ResidentVideoCall({ token, roomName, onHangUp }) {
+  const localRef = useRef(null);
+  const remoteRef = useRef(null);
+  const roomRef = useRef(null);
+  const [connected, setConnected] = useState(false);
 
+  useEffect(() => {
+    let cancelled = false;
+    import('twilio-video').then(TwilioVideo => {
+      TwilioVideo.connect(token, { name: roomName, audio: true, video: { width: 640 } })
+        .then(room => {
+          if (cancelled) { room.disconnect(); return; }
+          roomRef.current = room;
+          setConnected(true);
+          room.localParticipant.videoTracks.forEach(pub => {
+            if (localRef.current) localRef.current.appendChild(pub.track.attach());
+          });
+          room.participants.forEach(participant => {
+            participant.videoTracks.forEach(pub => {
+              if (pub.track && remoteRef.current) remoteRef.current.appendChild(pub.track.attach());
+            });
+            participant.on('trackSubscribed', track => {
+              if (track.kind === 'video' && remoteRef.current) remoteRef.current.appendChild(track.attach());
+            });
+          });
+          room.on('participantConnected', participant => {
+            participant.on('trackSubscribed', track => {
+              if (track.kind === 'video' && remoteRef.current) remoteRef.current.appendChild(track.attach());
+            });
+          });
+        })
+        .catch(() => { if (!cancelled) onHangUp(); });
+    });
+    return () => {
+      cancelled = true;
+      if (roomRef.current) { roomRef.current.disconnect(); roomRef.current = null; }
+    };
+  }, [token, roomName, onHangUp]);
+
+  return (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '16px', gap: '12px' }}>
+      <div ref={remoteRef} style={{ flex: 1, background: '#1a1a2e', borderRadius: '16px', overflow: 'hidden', minHeight: '300px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px' }}>Waiting for technician video...</div>
+      </div>
+      <div ref={localRef} style={{ width: '100px', height: '75px', background: '#1B3A6B', borderRadius: '10px', overflow: 'hidden', alignSelf: 'flex-end', border: '2px solid #14B8A6' }} />
+      <button onClick={onHangUp} style={{ width: '100%', background: '#ef4444', border: 'none', borderRadius: '10px', padding: '14px', color: '#fff', fontSize: '15px', fontWeight: '700', cursor: 'pointer' }}>
+        📵 End Call
+      </button>
+    </div>
+  );
+}
 export default Dashboard;

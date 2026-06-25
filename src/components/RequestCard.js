@@ -89,6 +89,24 @@ function RequestCard({ request, active, onClick, past }) {
           <span style={{ fontSize: '16px', fontWeight: '500', color: '#fff', letterSpacing: '0.08em' }}>{request.rvc_code}</span>
         </div>
       )}
+
+      {/* Video call button — activates when tech checks in */}
+      {!past && (
+        <div style={{ marginTop: '10px' }}>
+          {request.tech_checked_in ? (
+            <button
+              onClick={e => { e.stopPropagation(); if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('resident-video-call', { detail: { requestId: request.id } })); }}
+              style={{ width: '100%', background: '#7c3aed', border: 'none', borderRadius: '8px', padding: '10px', color: '#fff', fontSize: '13px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            >
+              📹 Join Video Call — Tech is Here
+            </button>
+          ) : (
+            <div style={{ width: '100%', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '10px', color: '#9ca3af', fontSize: '12px', textAlign: 'center' }}>
+              📹 Video call available when tech checks in
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
