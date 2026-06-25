@@ -4,10 +4,11 @@ import Dashboard from './components/Dashboard';
 import Survey from './components/Survey';
 import './App.css';
 
+const isSurvey = window.location.pathname === '/survey';
+
 function App() {
   const [resident, setResident] = useState(null);
   const [token, setToken] = useState(null);
-  const isSurvey = window.location.pathname === '/survey';
 
   useEffect(() => {
     if (isSurvey) return;
@@ -18,6 +19,8 @@ function App() {
       setResident(JSON.parse(savedResident));
     }
   }, []);
+
+  if (isSurvey) return <Survey />;
 
   const handleLogin = (token, residentData) => {
     localStorage.setItem('residentToken', token);
@@ -32,8 +35,6 @@ function App() {
     setToken(null);
     setResident(null);
   };
-
-  if (isSurvey) return <Survey />;
 
   return (
     <div className="App">
