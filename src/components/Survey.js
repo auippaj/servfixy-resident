@@ -141,6 +141,11 @@ export default function Survey() {
                 We take every concern seriously and a coordinator will review your comments.
               </div>
             </div>
+            <div style={{ marginTop: '16px', backgroundColor: '#f0fdf4', borderRadius: '12px', padding: '16px', border: '2px solid #22c55e' }}>
+              <div style={{ fontSize: '14px', color: '#15803d', fontWeight: '700' }}>
+                ✓ Your maintenance request is now closed
+              </div>
+            </div>
           </div>
         </div>
       </div>
