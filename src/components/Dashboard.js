@@ -57,7 +57,8 @@ function Dashboard({ resident, token, onLogout }) {
 
   const [showRequests, setShowRequests] = useState(false);
   const [videoRoom, setVideoRoom] = useState(null);
-  const _videoRef = useRef(null);
+  // eslint-disable-next-line no-unused-vars
+  const videoRef = useRef(null);
 
   useEffect(() => {
     const handleVideoCall = async (e) => {
