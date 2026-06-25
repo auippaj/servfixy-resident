@@ -48,7 +48,7 @@ function Dashboard({ resident, token, onLogout }) {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'touchpoints' }, () => { fetchRequests(); })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [fetchRequests]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleNewRequest = (newRequest, rvc) => {
     setRvcData({ request: newRequest, rvc });
