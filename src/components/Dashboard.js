@@ -57,7 +57,7 @@ function Dashboard({ resident, token, onLogout }) {
 
   const [showRequests, setShowRequests] = useState(false);
   const [videoRoom, setVideoRoom] = useState(null);
-  const videoRef = useRef(null);
+  const _videoRef = useRef(null);
 
   useEffect(() => {
     const handleVideoCall = async (e) => {
@@ -208,7 +208,7 @@ function ResidentVideoCall({ token, roomName, onHangUp }) {
   const localRef = useRef(null);
   const remoteRef = useRef(null);
   const roomRef = useRef(null);
-  const [connected, setConnected] = useState(false);
+  const [connected, setConnected] = useState(false); // eslint-disable-line no-unused-vars
 
   useEffect(() => {
     let cancelled = false;
