@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import Survey from './components/Survey';
 import './App.css';
 
 function App() {
   const [resident, setResident] = useState(null);
   const [token, setToken] = useState(null);
+
+  // Serve survey page without requiring login
+  if (window.location.pathname === '/survey') {
+    return <Survey />;
+  }
 
   useEffect(() => {
     const savedToken = localStorage.getItem('residentToken');
