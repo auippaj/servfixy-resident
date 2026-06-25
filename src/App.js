@@ -7,13 +7,10 @@ import './App.css';
 function App() {
   const [resident, setResident] = useState(null);
   const [token, setToken] = useState(null);
-
-  // Serve survey page without requiring login
-  if (window.location.pathname === '/survey') {
-    return <Survey />;
-  }
+  const isSurvey = window.location.pathname === '/survey';
 
   useEffect(() => {
+    if (isSurvey) return;
     const savedToken = localStorage.getItem('residentToken');
     const savedResident = localStorage.getItem('residentData');
     if (savedToken && savedResident) {
@@ -35,6 +32,8 @@ function App() {
     setToken(null);
     setResident(null);
   };
+
+  if (isSurvey) return <Survey />;
 
   return (
     <div className="App">
