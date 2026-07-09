@@ -78,8 +78,9 @@ function Dashboard({ resident, token, onLogout }) {
     return () => window.removeEventListener('resident-video-call', handleVideoCall);
   }, [token, resident.name]);
 
-  const openRequests = requests.filter(r => !['Completed', 'Closed'].includes(r.status));
-  const pastRequests = requests.filter(r => ['Completed', 'Closed'].includes(r.status));
+ const PAST_STATUSES = ['completed', 'Completed', 'closed', 'Closed', 'resident_confirmed'];
+const openRequests = requests.filter(r => !PAST_STATUSES.includes(r.status));
+const pastRequests = requests.filter(r => PAST_STATUSES.includes(r.status));
 
   return (
     <div style={{ minHeight: '100vh', background: '#f3f4f6' }}>
