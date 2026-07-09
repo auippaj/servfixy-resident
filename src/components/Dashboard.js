@@ -23,19 +23,18 @@ function Dashboard({ resident, token, onLogout }) {
       const data = await res.json();
       if (data.requests) {
         setRequests(data.requests);
-        if (!activeRequest && data.requests.length > 0) {
-          setActiveRequest(data.requests[0]);
-        } else if (activeRequest) {
-          const updated = data.requests.find(r => r.id === activeRequest.id);
-          if (updated) setActiveRequest(updated);
-        }
+        setActiveRequest(prev => {
+          if (!prev) return data.requests.length > 0 ? data.requests[0] : null;
+          const updated = data.requests.find(r => r.id === prev.id);
+          return updated || prev;
+        });
       }
     } catch (err) {
       console.error('Failed to fetch requests:', err);
     } finally {
       setLoading(false);
     }
-  }, [token, activeRequest]);
+  }, [token]);
 
   useEffect(() => {
     fetchRequests();
