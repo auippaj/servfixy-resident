@@ -14,6 +14,7 @@ function Dashboard({ resident, token, onLogout }) {
   const [loading, setLoading] = useState(true);
   const [activeRequest, setActiveRequest] = useState(null);
   const [rvcData, setRvcData] = useState(null);
+  const [pendingSurvey, setPendingSurvey] = useState(null);
 
   const fetchRequests = useCallback(async () => {
     try {
@@ -48,6 +49,14 @@ function Dashboard({ resident, token, onLogout }) {
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!resident?.id) return;
+    fetch(`${API_URL}/api/surveys/pending/${resident.id}`)
+      .then(r => r.json())
+      .then(data => { if (data.pending) setPendingSurvey(data.survey); })
+      .catch(() => {});
+  }, [resident]);
 
   const handleNewRequest = (newRequest, rvc) => {
     setRvcData({ request: newRequest, rvc });
@@ -105,6 +114,24 @@ const pastRequests = requests.filter(r => PAST_STATUSES.includes(r.status));
       </div>
 
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '1.5rem 1rem' }}>
+
+        {pendingSurvey && (
+          <div
+            onClick={() => window.location.href = `/survey?id=${pendingSurvey.service_request_id}`}
+            style={{ background: 'linear-gradient(135deg, #0F2A52, #1B3A6B)', borderRadius: '12px', padding: '16px 20px', marginBottom: '1.25rem', color: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 4px 16px rgba(15,42,82,0.25)' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <span style={{ fontSize: '28px' }}>⭐</span>
+              <div>
+                <div style={{ fontSize: '14px', fontWeight: '700', color: '#14B8A6', marginBottom: '2px' }}>How did we do?</div>
+                <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.7)', lineHeight: '1.4' }}>
+                  Your recent service request is complete. Rate your experience — takes 30 seconds.
+                </div>
+              </div>
+            </div>
+            <span style={{ fontSize: '20px', color: 'rgba(255,255,255,0.5)', flexShrink: 0, marginLeft: '12px' }}>›</span>
+          </div>
+        )}
 
         {rvcData && (
           <div style={{ background: '#1B3A6B', borderRadius: '12px', padding: '1.25rem', marginBottom: '1.5rem', color: '#fff' }}>
