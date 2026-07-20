@@ -4,6 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/firebase-messaging-sw.js')
+      .then(reg => console.log('[SW] resident registered:', reg.scope))
+      .catch(err => console.warn('[SW] registration failed:', err));
+  });
+}
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
