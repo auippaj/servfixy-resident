@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { registerPushToken, onForegroundMessage } from './firebase';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Survey from './components/Survey';
@@ -17,7 +18,17 @@ function App() {
     if (savedToken && savedResident) {
       setToken(savedToken);
       setResident(JSON.parse(savedResident));
+      // Re-register push token on mount if already logged in
+      registerPushToken(savedToken).catch(() => {});
     }
+    // Foreground push — show browser notification
+    const unsub = onForegroundMessage((payload) => {
+      const { title, body } = payload.notification || {};
+      if (Notification.permission === 'granted' && title) {
+        new Notification(title, { body, icon: '/logo192.png' });
+      }
+    });
+    return () => { if (typeof unsub === 'function') unsub(); };
   }, []);
 
   if (isSurvey) return <Survey />;
@@ -27,6 +38,8 @@ function App() {
     localStorage.setItem('residentData', JSON.stringify(residentData));
     setToken(token);
     setResident(residentData);
+    // Register FCM push token on login
+    if (token) registerPushToken(token).catch(() => {});
   };
 
   const handleLogout = () => {
