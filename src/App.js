@@ -18,8 +18,14 @@ function App() {
     if (savedToken && savedResident) {
       setToken(savedToken);
       setResident(JSON.parse(savedResident));
-      // Re-register push token on mount if already logged in
-      registerPushToken(savedToken).catch(() => {});
+      // Wait for SW to be ready before registering push token
+      const doRegister = async () => {
+        try {
+          if ('serviceWorker' in navigator) await navigator.serviceWorker.ready;
+          await registerPushToken(savedToken);
+        } catch (e) { console.warn('[push] mount registration skipped:', e.message); }
+      };
+      doRegister();
     }
     // Foreground push — show browser notification
     const unsub = onForegroundMessage((payload) => {
