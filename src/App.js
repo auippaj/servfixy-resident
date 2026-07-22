@@ -41,23 +41,17 @@ function App() {
 
   const speakWelcome = async (residentName) => {
     try {
-      if (!window.speechSynthesis) return;
       const res = await fetch('https://servfixy-production.up.railway.app/api/residents/welcome-message', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: residentName || '' })
       });
-      const { message } = await res.json();
-      if (!message) return;
-      window.speechSynthesis.cancel();
-      const utt = new SpeechSynthesisUtterance(message);
-      utt.rate = 0.92;
-      utt.pitch = 1.08;
-      utt.volume = 1;
-      const voices = window.speechSynthesis.getVoices();
-      const preferred = voices.find(v => /samantha|karen|moira|victoria|google us english/i.test(v.name));
-      if (preferred) utt.voice = preferred;
-      window.speechSynthesis.speak(utt);
+      if (!res.ok) return;
+      const audioBlob = await res.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.onended = () => URL.revokeObjectURL(audioUrl);
+      audio.play().catch(e => console.warn('[speakWelcome]', e));
     } catch (e) {
       console.warn('[speakWelcome]', e);
     }
