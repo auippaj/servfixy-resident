@@ -46,6 +46,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
   const [listening, setListening] = useState(false);
   const [photos, setPhotos] = useState([]);
   const [phone, setPhone] = useState(resident.phone || '');
+  const [isUrgent, setIsUrgent] = useState(false);
 
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -89,7 +90,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
 
   const handleSubmit = async () => {
     if (!category) { setError('Please select a category.'); return; }
-    if (!description.trim()) { setError('Please describe the problem.'); return; }
+    if (!description.trim() || description.trim().length < 20) { setError('Please describe the problem in at least 20 characters.'); return; }
     setError('');
     setLoading(true);
     try {
@@ -103,6 +104,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
           category,
           description,
           preferred_time: preferredTime,
+          is_emergency: isUrgent,
           location_room: locationData?.location_room || null,
           location_spot: locationData?.location_spot || null,
           location_pin_x: locationData?.location_pin_x || null,
@@ -187,7 +189,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
           {CATEGORIES.map(cat => (
             <div
               key={cat.label}
-              onClick={() => { setCategory(cat.label); setLocationConfirmed(false); setLocationData(null); }}
+              onClick={() => { try { navigator.vibrate && navigator.vibrate([10]); } catch(e){} setCategory(cat.label); setLocationConfirmed(false); setLocationData(null); }}
               style={{
                 border: category === cat.label ? '1.5px solid #14B8A6' : '1px solid #e5e7eb',
                 background: category === cat.label ? '#e1f5ee' : '#f9fafb',
@@ -206,6 +208,26 @@ function SubmitRequest({ token, resident, onSubmit }) {
           ))}
         </div>
       </div>
+
+      {category && (
+        <div
+          onClick={() => { try { navigator.vibrate && navigator.vibrate([isUrgent ? 10 : 30]); } catch(e){} setIsUrgent(!isUrgent); }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isUrgent ? '#fef2f2' : '#f9fafb', border: `1px solid ${isUrgent ? '#fca5a5' : '#e5e7eb'}`, borderRadius: '8px', padding: '10px 14px', cursor: 'pointer' }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '18px' }}>{isUrgent ? '🚨' : '⏰'}</span>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: '600', color: isUrgent ? '#991b1b' : '#374151' }}>
+                {isUrgent ? 'Marked as Emergency' : 'Mark as Emergency?'}
+              </div>
+              <div style={{ fontSize: '11px', color: '#9ca3af' }}>Only for urgent issues like flooding or no heat</div>
+            </div>
+          </div>
+          <div style={{ width: '36px', height: '20px', borderRadius: '10px', background: isUrgent ? '#ef4444' : '#d1d5db', position: 'relative', transition: 'background 0.2s' }}>
+            <div style={{ position: 'absolute', top: '2px', left: isUrgent ? '18px' : '2px', width: '16px', height: '16px', borderRadius: '50%', background: 'white', transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+          </div>
+        </div>
+      )}
 
       {category && !locationConfirmed && (
         <div>
@@ -244,6 +266,9 @@ function SubmitRequest({ token, resident, onSubmit }) {
             placeholder="Tell us what's happening..."
             style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: '8px', padding: '9px 12px', fontSize: '13px', height: '80px', resize: 'none', boxSizing: 'border-box' }}
           />
+          <div style={{ textAlign: 'right', fontSize: '11px', color: description.length < 20 ? '#9ca3af' : '#14B8A6', marginTop: '4px' }}>
+            {description.length} chars {description.length < 20 ? `(${20 - description.length} more to unlock submit)` : '✓'}
+          </div>
           <button
             onClick={startListening}
             disabled={listening}
