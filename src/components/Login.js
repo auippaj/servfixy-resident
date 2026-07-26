@@ -31,66 +31,61 @@ function Login({ onLogin }) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#0f1f3d', padding: '1rem' }}>
-      <div style={{ width: '100%', maxWidth: '560px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#1B3A6B', padding: '24px' }}>
+      <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '40px 36px', width: '100%', maxWidth: '480px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)' }}>
 
-        <div style={{ background: '#fff', borderRadius: '20px', padding: '1.75rem 2.5rem', border: '1px solid #e5e7eb' }}>
-
-          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-            <img
-              src="https://i.imgur.com/eX28z4J.png"
-              alt="Servfixy"
-              style={{ width: '420px', marginBottom: '4px' }}
-            />
-            <div style={{ fontSize: '14px', color: '#6b7280' }}>
-              Apartment Service Provider for Brant Rock
-            </div>
-          </div>
-
-          {error && (
-            <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', padding: '10px 12px', fontSize: '13px', color: '#991b1b', marginBottom: '1rem' }}>
-              {error}
-            </div>
-          )}
-
-          <div style={{ marginBottom: '1rem' }}>
-            <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '6px' }}>
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: '10px', padding: '12px 14px', fontSize: '14px' }}
-            />
-          </div>
-
-          <div style={{ marginBottom: '2rem' }}>
-            <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '6px' }}>
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="••••••••"
-              onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-              style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: '10px', padding: '12px 14px', fontSize: '14px' }}
-            />
-          </div>
-
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            style={{ width: '100%', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: '10px', padding: '14px', fontSize: '15px', fontWeight: '500', opacity: loading ? 0.7 : 1 }}
-          >
-            {loading ? 'Signing in...' : 'Sign In'}
-          </button>
-
-          
-
+        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
+          <img
+            src="https://i.imgur.com/eX28z4J.png"
+            alt="Servfixy"
+            style={{ width: '320px', marginBottom: '12px' }}
+          />
+          <p style={{ color: '#6b7280', margin: '0', fontSize: '14px' }}>
+            Apartment Service Provider for Brant Rock
+          </p>
         </div>
+
+        {error && (
+          <div style={{ backgroundColor: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', padding: '10px 12px', fontSize: '13px', color: '#991b1b', marginBottom: '16px' }}>
+            {error}
+          </div>
+        )}
+
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '6px' }}>
+            Email
+          </label>
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            style={{ width: '100%', padding: '12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', backgroundColor: '#f0f4ff', boxSizing: 'border-box' }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '20px' }}>
+          <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#374151', marginBottom: '6px' }}>
+            Password
+          </label>
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            placeholder="••••••••"
+            onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+            style={{ width: '100%', padding: '12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', backgroundColor: '#f0f4ff', boxSizing: 'border-box' }}
+          />
+        </div>
+
+        <button
+          onClick={handleSubmit}
+          disabled={loading}
+          style={{ width: '100%', padding: '13px', backgroundColor: '#1B3A6B', color: 'white', border: 'none', borderRadius: '8px', fontSize: '15px', fontWeight: '700', cursor: 'pointer', opacity: loading ? 0.7 : 1 }}
+        >
+          {loading ? 'Signing in...' : 'Sign In'}
+        </button>
+
       </div>
     </div>
   );
