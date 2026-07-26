@@ -10,6 +10,9 @@ const isSurvey = window.location.pathname === '/survey';
 function App() {
   const [resident, setResident] = useState(null);
   const [token, setToken] = useState(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => { setAuthReady(true); }, []);
 
   useEffect(() => {
     if (isSurvey) return;
@@ -74,6 +77,8 @@ function App() {
     setToken(null);
     setResident(null);
   };
+
+  if (!authReady) return null;
 
   return (
     <div className="App">
