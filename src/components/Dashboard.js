@@ -39,6 +39,8 @@ function Dashboard({ resident, token, onLogout }) {
 
   useEffect(() => {
     fetchRequests();
+    const interval = setInterval(fetchRequests, 30000);
+    return () => clearInterval(interval);
   }, [fetchRequests]);
 
   useEffect(() => {
@@ -63,7 +65,7 @@ function Dashboard({ resident, token, onLogout }) {
     fetchRequests();
   };
 
-  const [showRequests, setShowRequests] = useState(false);
+  const [showRequests, setShowRequests] = useState(true);
   const [videoRoom, setVideoRoom] = useState(null);
   // eslint-disable-next-line no-unused-vars
   const videoRef = useRef(null);
@@ -95,7 +97,7 @@ const pastRequests = requests.filter(r => PAST_STATUSES.includes(r.status));
     <div style={{ minHeight: '100vh', background: '#f3f4f6' }}>
       <div style={{ background: '#1B3A6B', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <div style={{ color: '#fff', fontSize: '16px', fontWeight: '500' }}>ServiFix</div>
+          <div style={{ color: '#fff', fontSize: '16px', fontWeight: '500' }}>Servfixy</div>
           <div style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginTop: '2px' }}>
             {resident.property_name} · Unit {resident.unit_number}
           </div>
@@ -152,7 +154,7 @@ const pastRequests = requests.filter(r => PAST_STATUSES.includes(r.status));
           </div>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', gap: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: window.innerWidth < 640 ? '1fr' : 'minmax(0,1fr) minmax(0,1fr)', gap: '1rem' }}>
 
           <div>
             <button
@@ -179,8 +181,9 @@ const pastRequests = requests.filter(r => PAST_STATUSES.includes(r.status));
                   </div>
                 ) : openRequests.length === 0 ? (
                   <div style={{ background: '#fff', borderRadius: '12px', padding: '2rem', textAlign: 'center', border: '1px solid #e5e7eb' }}>
-                    <div style={{ fontSize: '13px', color: '#6b7280' }}>No active requests</div>
-                    <div style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>Submit a new request to get started.</div>
+                    <div style={{ fontSize: '28px', marginBottom: '8px' }}>✅</div>
+                    <div style={{ fontSize: '13px', color: '#6b7280', fontWeight: '600' }}>No active requests</div>
+                    <div style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>Submit a new request below to get started.</div>
                   </div>
                 ) : (
                   openRequests.map(r => (
