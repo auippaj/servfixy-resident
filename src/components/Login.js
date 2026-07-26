@@ -41,7 +41,7 @@ function Login({ onLogin }) {
             style={{ width: '320px', marginBottom: '12px' }}
           />
           <p style={{ color: '#6b7280', margin: '0', fontSize: '14px' }}>
-            Apartment Service Provider for Brant Rock
+            Resident Portal
           </p>
         </div>
 
