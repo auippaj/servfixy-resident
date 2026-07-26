@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 const API = 'https://servfixy-production.up.railway.app/api';
-const GOOGLE_REVIEW_URL = 'https://g.page/r/YOUR_REVIEW_LINK/review';
+const GOOGLE_REVIEW_URL = 'https://g.page/r/CbFVPWxXPYVQEAE/review';
 
 export default function Survey() {
   const [srId, setSrId] = useState(null);
@@ -187,7 +187,7 @@ export default function Survey() {
             {[1, 2, 3, 4, 5].map(star => (
               <button
                 key={star}
-                onClick={() => setRating(star)}
+                onClick={() => { try { navigator.vibrate && navigator.vibrate([10]); } catch(e){} setRating(star); }}
                 onMouseEnter={() => setHovered(star)}
                 onMouseLeave={() => setHovered(0)}
                 style={{
