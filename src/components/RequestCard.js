@@ -23,7 +23,7 @@ function RequestCard({ request, active, onClick, past }) {
 
   return (
     <div
-      onClick={onClick}
+      onClick={() => { try { navigator.vibrate && navigator.vibrate([10]); } catch(e){} onClick(); }}
       style={{
         background: '#fff',
         borderRadius: '12px',
@@ -48,6 +48,17 @@ function RequestCard({ request, active, onClick, past }) {
         </span>
       </div>
 
+      {/* En route ETA badge */}
+      {request.status === 'En route' || request.status === 'in_progress' ? (
+        <div style={{ background: 'linear-gradient(135deg, #14B8A6, #0F9B85)', borderRadius: '8px', padding: '8px 12px', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '16px' }}>🚗</span>
+          <div>
+            <div style={{ fontSize: '12px', fontWeight: '700', color: 'white' }}>Technician is on the way</div>
+            <div style={{ fontSize: '11px', color: 'rgba(255,255,255,0.8)' }}>Your verification code is ready to show</div>
+          </div>
+        </div>
+      ) : null}
+
       {/* Description */}
       {request.description && (
         <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '12px', lineHeight: '1.5', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
@@ -58,7 +69,13 @@ function RequestCard({ request, active, onClick, past }) {
       {/* Touch tracker */}
       {!past && (
         <div>
-          <div style={{ fontSize: '11px', color: '#9ca3af', marginBottom: '6px' }}>5-touch tracker</div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+            <div style={{ fontSize: '11px', color: '#9ca3af' }}>5-touch tracker</div>
+            <div style={{ fontSize: '11px', color: '#14B8A6', fontWeight: '600' }}>{firedTouches.length}/5 complete</div>
+          </div>
+          <div style={{ height: '4px', background: '#f0f0f0', borderRadius: '2px', marginBottom: '8px', overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${(firedTouches.length/5)*100}%`, background: '#14B8A6', borderRadius: '2px', transition: 'width 0.3s' }} />
+          </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             {TOUCH_LABELS.map((label, i) => {
               const num = i + 1;
