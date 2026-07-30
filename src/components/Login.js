@@ -36,7 +36,7 @@ function Login({ onLogin }) {
 
         <div style={{ textAlign: 'center', marginBottom: '28px' }}>
           <img
-            src="https://i.imgur.com/eX28z4J.png"
+            src="https://i.imgur.com/An6s6sp.png"
             alt="Servfixy"
             style={{ width: '320px', marginBottom: '12px' }}
           />
