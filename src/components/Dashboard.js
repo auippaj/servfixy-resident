@@ -97,7 +97,7 @@ const pastRequests = requests.filter(r => PAST_STATUSES.includes(r.status));
     <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
       <div style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <div><img src='https://i.imgur.com/An6s6sp.png' alt='Servfixy' style={{ height: '28px', objectFit: 'contain' }} /></div>
+          <div><img src='https://i.imgur.com/OKIqq0K.png' alt='Servfixy' style={{ height: '28px', objectFit: 'contain' }} /></div>
           <div style={{ color: '#374151', fontSize: '12px', marginTop: '2px' }}>
             {resident.property_name} · Unit {resident.unit_number}
           </div>
