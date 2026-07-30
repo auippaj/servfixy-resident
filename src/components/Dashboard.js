@@ -94,11 +94,11 @@ const openRequests = requests.filter(r => !PAST_STATUSES.includes(r.status));
 const pastRequests = requests.filter(r => PAST_STATUSES.includes(r.status));
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f3f4f6' }}>
-      <div style={{ background: '#1B3A6B', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <div style={{ minHeight: '100vh', background: '#F0F4F8' }}>
+      <div style={{ background: '#ffffff', borderBottom: '1px solid #e2e8f0', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <div style={{ color: '#fff', fontSize: '16px', fontWeight: '500' }}>Servfixy</div>
-          <div style={{ color: 'rgba(255,255,255,0.65)', fontSize: '12px', marginTop: '2px' }}>
+          <div><img src='https://i.imgur.com/cbDJcbx.png' alt='Servfixy' style={{ height: '28px', objectFit: 'contain' }} /></div>
+          <div style={{ color: '#374151', fontSize: '12px', marginTop: '2px' }}>
             {resident.property_name} · Unit {resident.unit_number}
           </div>
         </div>
@@ -108,7 +108,7 @@ const pastRequests = requests.filter(r => PAST_STATUSES.includes(r.status));
           </div>
           <button
             onClick={onLogout}
-            style={{ background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: '6px', color: '#fff', fontSize: '12px', padding: '6px 10px' }}
+            style={{ background: 'transparent', border: '1px solid #e2e8f0', borderRadius: '6px', color: '#374151', fontSize: '12px', padding: '6px 10px', cursor: 'pointer' }}
           >
             Sign out
           </button>
