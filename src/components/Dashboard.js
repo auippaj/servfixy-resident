@@ -135,7 +135,7 @@ function PTPPortal({ resident, token }) {
                 { key: 'payment_plan', label: 'Payment Plan', desc: 'Split into multiple payments', icon: '📊' }
               ].map(opt => (
                 <div key={opt.key} onClick={() => setRequestType(opt.key)}
-                  style={{ border: requestType === opt.key ? '2px solid #1B3A6B' : '1px solid #e2e8f0', borderRadius: '10px', padding: '14px', cursor: 'pointer', backgroundColor: requestType === opt.key ? '#f0f4ff' : '#fafafa' }}>
+                  style={{ border: requestType === opt.key ? '2px solid #1B3A6B' : '1px solid #e2e8f0', borderRadius: '10px', padding: '14px', cursor: 'pointer', backgroundColor: requestType === opt.key ? '#f0f4ff' : '#F0F4F8' }}>
                   <div style={{ fontSize: '22px', marginBottom: '6px' }}>{opt.icon}</div>
                   <div style={{ fontSize: '13px', fontWeight: '700', color: '#111827', marginBottom: '2px' }}>{opt.label}</div>
                   <div style={{ fontSize: '11px', color: '#6b7280' }}>{opt.desc}</div>
@@ -217,7 +217,7 @@ function PTPPortal({ resident, token }) {
               {['Online Portal', 'Check', 'Money Order', 'Cashiers Check', 'ACH', 'Other'].map(method => (
                 <button key={method} onClick={() => setPaymentMethod(method)}
                   style={{ padding: '10px 8px', borderRadius: '8px', border: paymentMethod === method ? '2px solid #1B3A6B' : '1px solid #e2e8f0',
-                    backgroundColor: paymentMethod === method ? '#f0f4ff' : '#fafafa',
+                    backgroundColor: paymentMethod === method ? '#f0f4ff' : '#F0F4F8',
                     color: paymentMethod === method ? '#1B3A6B' : '#374151',
                     fontSize: '12px', fontWeight: paymentMethod === method ? '700' : '400', cursor: 'pointer' }}>
                   {method}
