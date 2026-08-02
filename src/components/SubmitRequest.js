@@ -165,7 +165,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
 
       <div>
         <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>Unit number</label>
-        <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '9px 12px', fontSize: '13px', color: '#6b7280', background: '#f9fafb' }}>
+        <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '9px 12px', fontSize: '13px', color: '#6b7280', background: '#F0F4F8' }}>
           {resident.unit_number} — {resident.property_name}
         </div>
       </div>
@@ -192,7 +192,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
               onClick={() => { try { navigator.vibrate && navigator.vibrate([10]); } catch(e){} setCategory(cat.label); setLocationConfirmed(false); setLocationData(null); }}
               style={{
                 border: category === cat.label ? '1.5px solid #14B8A6' : '1px solid #e5e7eb',
-                background: category === cat.label ? '#e1f5ee' : '#f9fafb',
+                background: category === cat.label ? '#e1f5ee' : '#F0F4F8',
                 borderRadius: '8px',
                 padding: '8px 4px',
                 textAlign: 'center',
@@ -212,7 +212,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
       {category && (
         <div
           onClick={() => { try { navigator.vibrate && navigator.vibrate([isUrgent ? 10 : 30]); } catch(e){} setIsUrgent(!isUrgent); }}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isUrgent ? '#fef2f2' : '#f9fafb', border: `1px solid ${isUrgent ? '#fca5a5' : '#e5e7eb'}`, borderRadius: '8px', padding: '10px 14px', cursor: 'pointer' }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isUrgent ? '#fef2f2' : '#F0F4F8', border: `1px solid ${isUrgent ? '#fca5a5' : '#e5e7eb'}`, borderRadius: '8px', padding: '10px 14px', cursor: 'pointer' }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span style={{ fontSize: '18px' }}>{isUrgent ? '🚨' : '⏰'}</span>
@@ -242,7 +242,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
       )}
 
       {locationConfirmed && (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: locationData ? '#E1F5EE' : '#f9fafb', border: `1px solid ${locationData ? '#14B8A6' : '#e5e7eb'}`, borderRadius: '8px', padding: '10px 12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: locationData ? '#E1F5EE' : '#F0F4F8', border: `1px solid ${locationData ? '#14B8A6' : '#e5e7eb'}`, borderRadius: '8px', padding: '10px 12px' }}>
           <div style={{ fontSize: '13px', color: locationData ? '#0F6E56' : '#6b7280' }}>
             {locationData
               ? `📍 ${locationData.location_room} — ${locationData.location_spot}`
