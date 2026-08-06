@@ -28,6 +28,71 @@ const CATEGORIES = [
   { label: 'Doors', icon: '🚪' }
 ];
 
+const ISSUE_ITEMS = {
+  HVAC: [
+    'AC is not cooling','AC is blowing warm air','No air is coming from vents',
+    'Airflow from vents is weak','One room is too hot or cold','Heat is not working',
+    'Heat is blowing cold air','Thermostat screen is blank','Thermostat is not responding',
+    'HVAC system will not turn on','HVAC system will not turn off','System starts and stops repeatedly',
+    'HVAC is making a loud noise','Burning smell from vents — Urgent',
+    'Gas or rotten-egg smell near heater — Emergency','Musty or mildew smell from vents',
+    'Water leaking from HVAC unit','Water dripping from a vent','Air filter needs replacement',
+    'Other HVAC issue'
+  ],
+  Plumbing: [
+    'Toilet is clogged','Toilet is overflowing — Urgent','Toilet keeps running','Toilet is leaking',
+    'Toilet is loose or rocking','Kitchen sink is clogged','Bathroom sink is clogged',
+    'Tub or shower drain is clogged','Faucet is dripping','Faucet handle is loose or broken',
+    'Water pressure is low','No water in the apartment — Urgent','No hot water',
+    'Water temperature is too hot or cold','Water is leaking under a sink',
+    'Water is leaking from a wall or ceiling — Urgent','Water heater is leaking — Urgent',
+    'Tub or shower faucet is leaking','Sewer backup or strong sewer odor — Urgent',
+    'Other plumbing issue'
+  ],
+  Electrical: [
+    'No power in the entire apartment — Urgent','Power is out in part of the apartment',
+    'Circuit breaker keeps tripping','Electrical outlet is not working','GFCI outlet will not reset',
+    'Outlet is loose, cracked, or damaged','Outlet or switch is sparking — Emergency',
+    'Burning smell or smoke — Emergency','Exposed wires or missing outlet cover — Urgent',
+    'Light fixture is not working','Lights are flickering or dimming','Light switch is not working',
+    'Switch is hot, buzzing, or loose — Urgent','Ceiling fan is not working',
+    'Ceiling fan is wobbling or noisy','Bathroom exhaust fan is not working',
+    'Smoke alarm is chirping','Smoke alarm is not working — Urgent',
+    'Carbon monoxide alarm is sounding — Emergency','Other electrical issue'
+  ],
+  Appliance: [
+    'Refrigerator is not cooling','Freezer is not freezing','Refrigerator is leaking water',
+    'Refrigerator is making a loud noise','Ice maker is not working or leaking',
+    'Stove burner is not heating','Burner is sparking or will not turn off — Urgent',
+    'Oven is not heating','Oven temperature is incorrect','Oven door, light, or rack is broken',
+    'Microwave will not turn on','Microwave is not heating or is sparking — Urgent',
+    'Dishwasher will not start','Dishwasher is not cleaning dishes',
+    'Dishwasher is leaking or not draining','Garbage disposal is not working',
+    'Washer will not start','Washer is leaking or not draining',
+    'Dryer will not start, tumble, or heat','Other appliance issue'
+  ],
+  General: [
+    'Ceiling has a stain or damage','Wall has a hole or damage','Paint is peeling or bubbling',
+    'Carpet is damaged or loose','Hard flooring is damaged or loose','Tile or grout is damaged',
+    'Baseboard or trim is damaged','Cabinet door or drawer is broken','Countertop is damaged',
+    'Closet shelf or rod is broken','Window will not open or close',
+    'Window glass is cracked or broken — Urgent','Window screen is damaged',
+    'Blinds or shades are damaged','Caulking is cracked or missing',
+    'Mold or mildew concern — Urgent review','Insect or pest concern','Rodent concern',
+    'Unusual odor or smoke smell — Urgent review','Other general issue'
+  ],
+  Doors: [
+    'Front door will not lock — Emergency security issue','Front door will not unlock',
+    'Deadbolt is not working','Doorknob or handle is loose or broken','Front door will not close',
+    'Front door sticks or rubs','Gap or draft around front door','Door chain or security latch is broken',
+    'Bedroom door will not close','Bathroom door will not close','Closet door is off track',
+    'Sliding patio door will not open or close','Patio door lock is not working — Urgent',
+    'Screen door is damaged','Door hinge is loose or squeaking','Door frame or trim is damaged',
+    'Weather stripping is damaged','Peephole or door viewer is damaged',
+    'Mailbox lock or key is not working','Other door or access issue'
+  ]
+};
+
 const TIME_OPTIONS = [
   'Any time — urgent',
   'Morning (8am–12pm)',
@@ -47,6 +112,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
   const [photos, setPhotos] = useState([]);
   const [phone, setPhone] = useState(resident.phone || '');
   const [isUrgent, setIsUrgent] = useState(false);
+  const [issueType, setIssueType] = useState('');
 
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -189,7 +255,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
           {CATEGORIES.map(cat => (
             <div
               key={cat.label}
-              onClick={() => { try { navigator.vibrate && navigator.vibrate([10]); } catch(e){} setCategory(cat.label); setLocationConfirmed(false); setLocationData(null); }}
+              onClick={() => { try { navigator.vibrate && navigator.vibrate([10]); } catch(e){} setCategory(cat.label); setIssueType(''); setLocationConfirmed(false); setLocationData(null); }}
               style={{
                 border: category === cat.label ? '1.5px solid #14B8A6' : '1px solid #e5e7eb',
                 background: category === cat.label ? '#e1f5ee' : '#F0F4F8',
@@ -208,6 +274,38 @@ function SubmitRequest({ token, resident, onSubmit }) {
           ))}
         </div>
       </div>
+
+      {category && ISSUE_ITEMS[category] && (
+        <div>
+          <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '6px' }}>What specifically is the issue?</label>
+          <select
+            value={issueType}
+            onChange={e => {
+              const val = e.target.value;
+              setIssueType(val);
+              if (val.includes('— Emergency')) setIsUrgent(true);
+            }}
+            style={{ width: '100%', padding: '11px 12px', border: issueType ? '1.5px solid #14B8A6' : '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', backgroundColor: 'white', color: issueType ? '#0F6E56' : '#6b7280', boxSizing: 'border-box', appearance: 'none', backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', cursor: 'pointer' }}
+          >
+            <option value=''>Select the issue...</option>
+            {ISSUE_ITEMS[category].map(item => (
+              <option key={item} value={item}
+                style={{ color: item.includes('Emergency') ? '#dc2626' : item.includes('Urgent') ? '#d97706' : '#111827', fontWeight: item.includes('Emergency') || item.includes('Urgent') ? '600' : '400' }}
+              >{item}</option>
+            ))}
+          </select>
+          {issueType && issueType.includes('— Emergency') && (
+            <div style={{ marginTop: '6px', backgroundColor: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', color: '#dc2626', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span>🚨</span> This has been flagged as an emergency. Our team will respond immediately.
+            </div>
+          )}
+          {issueType && issueType.includes('— Urgent') && !issueType.includes('Emergency') && (
+            <div style={{ marginTop: '6px', backgroundColor: '#fffbeb', border: '1px solid #fcd34d', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', color: '#92400e', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span>⚠️</span> This has been flagged as urgent. We will prioritize your request.
+            </div>
+          )}
+        </div>
+      )}
 
       {category && (
         <div
