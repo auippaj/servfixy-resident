@@ -49,7 +49,6 @@ const ZONES = [
 
 function FloorplanPicker({ onSelect, onSkip }) {
   const [selectedZone, setSelectedZone] = useState(null);
-  const [selectedSpot, setSelectedSpot] = useState(null);
   const [pinPos, setPinPos] = useState(null);
   const wrapRef = useRef(null);
 
@@ -61,17 +60,12 @@ function FloorplanPicker({ onSelect, onSkip }) {
     const cx = ((el.left + el.width / 2 - rect.left) / rect.width) * 100;
     const cy = ((el.top + el.height * 0.35 - rect.top) / rect.height) * 100;
     setSelectedZone(zone);
-    setSelectedSpot(null);
     setPinPos({ x: cx, y: cy });
-  };
-
-  const handleConfirm = () => {
-    if (!selectedZone || !selectedSpot) return;
     onSelect({
-      location_room: selectedZone.label,
-      location_spot: selectedSpot,
-      location_pin_x: pinPos.x,
-      location_pin_y: pinPos.y
+      location_room: zone.label,
+      location_spot: null,
+      location_pin_x: cx,
+      location_pin_y: cy
     });
   };
 
@@ -155,81 +149,14 @@ function FloorplanPicker({ onSelect, onSkip }) {
               marginTop: '4px',
               whiteSpace: 'nowrap'
             }}>
-              {selectedSpot || selectedZone.label}
+              {selectedZone.label}
             </div>
           </div>
         )}
       </div>
 
-      {/* Selected room indicator */}
-      {selectedZone && (
-        <div style={{
-          marginTop: '10px',
-          fontSize: '13px',
-          color: '#0F6E56',
-          background: '#E1F5EE',
-          border: '1px solid #14B8A6',
-          borderRadius: '8px',
-          padding: '8px 12px',
-          fontWeight: '500'
-        }}>
-          📍 {selectedZone.label} — pick the specific spot below
-        </div>
-      )}
-
-      {/* Spot picker */}
-      {selectedZone && (
-        <div style={{ marginTop: '12px' }}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
-            gap: '8px'
-          }}>
-            {selectedZone.spots.map(spot => (
-              <button
-                key={spot}
-                onClick={() => setSelectedSpot(spot)}
-                style={{
-                  background: selectedSpot === spot ? '#E1F5EE' : '#f8fafc',
-                  border: selectedSpot === spot ? '1.5px solid #14B8A6' : '1px solid #e2e8f0',
-                  borderRadius: '8px',
-                  padding: '13px 12px',
-                  fontSize: '13px',
-                  color: selectedSpot === spot ? '#0F6E56' : '#334155',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  fontWeight: selectedSpot === spot ? '600' : '400',
-                  minHeight: '48px',
-                  WebkitTapHighlightColor: 'transparent'
-                }}
-              >
-                {spot}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Actions */}
       <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
-        <button
-          onClick={handleConfirm}
-          disabled={!selectedZone || !selectedSpot}
-          style={{
-            flex: 1,
-            background: selectedZone && selectedSpot ? '#1B3A6B' : '#e2e8f0',
-            color: selectedZone && selectedSpot ? 'white' : '#94a3b8',
-            border: 'none',
-            borderRadius: '8px',
-            padding: '12px',
-            fontSize: '14px',
-            fontWeight: '600',
-            cursor: selectedZone && selectedSpot ? 'pointer' : 'default',
-            WebkitTapHighlightColor: 'transparent'
-          }}
-        >
-          Confirm Location
-        </button>
         <button
           onClick={onSkip}
           style={{
