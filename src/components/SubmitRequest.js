@@ -171,6 +171,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
           description,
           preferred_time: preferredTime,
           is_emergency: isUrgent,
+          issue_type: issueType || null,
           location_room: locationData?.location_room || null,
           location_spot: locationData?.location_spot || null,
           location_pin_x: locationData?.location_pin_x || null,
