@@ -276,58 +276,6 @@ function SubmitRequest({ token, resident, onSubmit }) {
         </div>
       </div>
 
-      {category && ISSUE_ITEMS[category] && (
-        <div>
-          <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '6px' }}>What specifically is the issue?</label>
-          <select
-            value={issueType}
-            onChange={e => {
-              const val = e.target.value;
-              setIssueType(val);
-              if (val.includes('— Emergency')) setIsUrgent(true);
-            }}
-            style={{ width: '100%', padding: '11px 12px', border: issueType ? '1.5px solid #14B8A6' : '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', backgroundColor: 'white', color: issueType ? '#0F6E56' : '#6b7280', boxSizing: 'border-box', cursor: 'pointer' }}
-          >
-            <option value=''>Select the issue...</option>
-            {ISSUE_ITEMS[category].map(item => (
-              <option key={item} value={item}
-                style={{ color: item.includes('Emergency') ? '#dc2626' : item.includes('Urgent') ? '#d97706' : '#111827', fontWeight: item.includes('Emergency') || item.includes('Urgent') ? '600' : '400' }}
-              >{item}</option>
-            ))}
-          </select>
-          {issueType && issueType.includes('— Emergency') && (
-            <div style={{ marginTop: '6px', backgroundColor: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', color: '#dc2626', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span>🚨</span> This has been flagged as an emergency. Our team will respond immediately.
-            </div>
-          )}
-          {issueType && issueType.includes('— Urgent') && !issueType.includes('Emergency') && (
-            <div style={{ marginTop: '6px', backgroundColor: '#fffbeb', border: '1px solid #fcd34d', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', color: '#92400e', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span>⚠️</span> This has been flagged as urgent. We will prioritize your request.
-            </div>
-          )}
-        </div>
-      )}
-
-      {category && (
-        <div
-          onClick={() => { try { navigator.vibrate && navigator.vibrate([isUrgent ? 10 : 30]); } catch(e){} setIsUrgent(!isUrgent); }}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isUrgent ? '#fef2f2' : '#F0F4F8', border: `1px solid ${isUrgent ? '#fca5a5' : '#e5e7eb'}`, borderRadius: '8px', padding: '10px 14px', cursor: 'pointer' }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '18px' }}>{isUrgent ? '🚨' : '⏰'}</span>
-            <div>
-              <div style={{ fontSize: '13px', fontWeight: '600', color: isUrgent ? '#991b1b' : '#374151' }}>
-                {isUrgent ? 'Marked as Emergency' : 'Mark as Emergency?'}
-              </div>
-              <div style={{ fontSize: '11px', color: '#9ca3af' }}>Only for urgent issues like flooding or no heat</div>
-            </div>
-          </div>
-          <div style={{ width: '36px', height: '20px', borderRadius: '10px', background: isUrgent ? '#ef4444' : '#d1d5db', position: 'relative', transition: 'background 0.2s' }}>
-            <div style={{ position: 'absolute', top: '2px', left: isUrgent ? '18px' : '2px', width: '16px', height: '16px', borderRadius: '50%', background: 'white', transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
-          </div>
-        </div>
-      )}
-
       {category && !locationConfirmed && (
         <div>
           <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '6px' }}>
@@ -353,6 +301,57 @@ function SubmitRequest({ token, resident, onSubmit }) {
           >
             Change
           </button>
+        </div>
+      )}
+
+      {locationConfirmed && ISSUE_ITEMS[category] && (
+        <div>
+          <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '6px' }}>What specifically is the issue?</label>
+          <select
+            value={issueType}
+            onChange={e => {
+              const val = e.target.value;
+              setIssueType(val);
+              if (val.includes('— Emergency')) setIsUrgent(true);
+              else if (!val.includes('— Urgent')) setIsUrgent(false);
+            }}
+            style={{ width: '100%', padding: '11px 12px', border: issueType ? '1.5px solid #14B8A6' : '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', backgroundColor: 'white', color: issueType ? '#0F6E56' : '#6b7280', boxSizing: 'border-box', cursor: 'pointer' }}
+          >
+            <option value=''>Select the issue...</option>
+            {ISSUE_ITEMS[category].map(item => (
+              <option key={item} value={item}>{item}</option>
+            ))}
+          </select>
+          {issueType && issueType.includes('— Emergency') && (
+            <div style={{ marginTop: '6px', backgroundColor: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', color: '#dc2626', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span>🚨</span> This has been flagged as an emergency. Our team will respond immediately.
+            </div>
+          )}
+          {issueType && issueType.includes('— Urgent') && !issueType.includes('Emergency') && (
+            <div style={{ marginTop: '6px', backgroundColor: '#fffbeb', border: '1px solid #fcd34d', borderRadius: '8px', padding: '8px 12px', fontSize: '12px', color: '#92400e', fontWeight: '600', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span>⚠️</span> This has been flagged as urgent. We will prioritize your request.
+            </div>
+          )}
+        </div>
+      )}
+
+      {locationConfirmed && (
+        <div
+          onClick={() => { try { navigator.vibrate && navigator.vibrate([isUrgent ? 10 : 30]); } catch(e){} setIsUrgent(!isUrgent); }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: isUrgent ? '#fef2f2' : '#F0F4F8', border: `1px solid ${isUrgent ? '#fca5a5' : '#e5e7eb'}`, borderRadius: '8px', padding: '10px 14px', cursor: 'pointer' }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ fontSize: '18px' }}>{isUrgent ? '🚨' : '⏰'}</span>
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: '600', color: isUrgent ? '#991b1b' : '#374151' }}>
+                {isUrgent ? 'Marked as Emergency' : 'Mark as Emergency?'}
+              </div>
+              <div style={{ fontSize: '11px', color: '#9ca3af' }}>Only for urgent issues like flooding or no heat</div>
+            </div>
+          </div>
+          <div style={{ width: '36px', height: '20px', borderRadius: '10px', background: isUrgent ? '#ef4444' : '#d1d5db', position: 'relative', transition: 'background 0.2s' }}>
+            <div style={{ position: 'absolute', top: '2px', left: isUrgent ? '18px' : '2px', width: '16px', height: '16px', borderRadius: '50%', background: 'white', transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+          </div>
         </div>
       )}
 
