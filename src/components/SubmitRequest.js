@@ -292,7 +292,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: locationData ? '#E1F5EE' : '#F0F4F8', border: `1px solid ${locationData ? '#14B8A6' : '#e5e7eb'}`, borderRadius: '8px', padding: '10px 12px' }}>
           <div style={{ fontSize: '13px', color: locationData ? '#0F6E56' : '#6b7280' }}>
             {locationData
-              ? `📍 ${locationData.location_room} — ${locationData.location_spot}`
+              ? `📍 ${locationData.location_room}`
               : '📍 No location selected'}
           </div>
           <button
