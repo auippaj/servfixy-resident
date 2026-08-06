@@ -286,7 +286,7 @@ function SubmitRequest({ token, resident, onSubmit }) {
               setIssueType(val);
               if (val.includes('— Emergency')) setIsUrgent(true);
             }}
-            style={{ width: '100%', padding: '11px 12px', border: issueType ? '1.5px solid #14B8A6' : '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', backgroundColor: 'white', color: issueType ? '#0F6E56' : '#6b7280', boxSizing: 'border-box', appearance: 'none', backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%236b7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 12px center', cursor: 'pointer' }}
+            style={{ width: '100%', padding: '11px 12px', border: issueType ? '1.5px solid #14B8A6' : '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', backgroundColor: 'white', color: issueType ? '#0F6E56' : '#6b7280', boxSizing: 'border-box', cursor: 'pointer' }}
           >
             <option value=''>Select the issue...</option>
             {ISSUE_ITEMS[category].map(item => (
