@@ -482,7 +482,14 @@ function Dashboard({ resident, token, onLogout }) {
   const [pendingSurvey, setPendingSurvey] = useState(null);
   const [activeTab, setActiveTab] = useState('requests');
   const [videoRoom, setVideoRoom] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const videoRef = useRef(null); // eslint-disable-line no-unused-vars
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   const fetchRequests = useCallback(async () => {
     try {
@@ -540,7 +547,7 @@ function Dashboard({ resident, token, onLogout }) {
         const data = await res.json();
         setVideoRoom({ token: data.token, roomName: data.roomName, requestId });
       } catch (err) {
-        alert('Could not connect to video call.');
+        console.error('Could not connect to video call.');
       }
     };
     window.addEventListener('resident-video-call', handleVideoCall);
@@ -573,8 +580,8 @@ function Dashboard({ resident, token, onLogout }) {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#F0F4F8', fontFamily: 'Arial, sans-serif' }}>
 
-      {/* Left Sidebar */}
-      <div style={{ width: '240px', minWidth: '240px', backgroundColor: '#1B3A6B', display: 'flex', flexDirection: 'column', height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 100 }}>
+      {/* Left Sidebar -- desktop only */}
+      {!isMobile && <div style={{ width: '240px', minWidth: '240px', backgroundColor: '#1B3A6B', display: 'flex', flexDirection: 'column', height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 100 }}>
         <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
           <img src="https://i.imgur.com/OKIqq0K.png" alt="Servfixy" style={{ width: '160px', height: 'auto' }} />
           <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', marginTop: '4px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Resident Portal</div>
@@ -624,20 +631,30 @@ function Dashboard({ resident, token, onLogout }) {
             Sign out
           </button>
         </div>
-      </div>
+      </div>}
 
       {/* Main content */}
-      <div style={{ marginLeft: '240px', flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <div style={{ marginLeft: isMobile ? 0 : '240px', flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh', paddingBottom: isMobile ? '72px' : 0 }}>
 
-        <div style={{ backgroundColor: '#fff', borderBottom: '1px solid #e2e8f0', padding: '0 28px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 50 }}>
-          <span style={{ fontSize: '16px', fontWeight: '700', color: '#111827' }}>{pageTitle[activeTab]}</span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
-            <span style={{ fontSize: '12px', color: '#6b7280' }}>Live updates active</span>
+        {isMobile ? (
+          <div style={{ backgroundColor: '#1B3A6B', padding: '0 20px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 50 }}>
+            <img src="https://i.imgur.com/OKIqq0K.png" alt="Servfixy" style={{ height: '28px', objectFit: 'contain' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
+              <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#14B8A6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '700', color: '#fff' }}>{initials}</div>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div style={{ backgroundColor: '#fff', borderBottom: '1px solid #e2e8f0', padding: '0 28px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 50 }}>
+            <span style={{ fontSize: '16px', fontWeight: '700', color: '#111827' }}>{pageTitle[activeTab]}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
+              <span style={{ fontSize: '12px', color: '#6b7280' }}>Live updates active</span>
+            </div>
+          </div>
+        )}
 
-        <div style={{ flex: 1, padding: '28px' }}>
+        <div style={{ flex: 1, padding: isMobile ? '16px' : '28px' }}>
 
           {/* Survey banner */}
           {pendingSurvey && (
@@ -671,7 +688,7 @@ function Dashboard({ resident, token, onLogout }) {
 
           {/* REQUESTS TAB */}
           {activeTab === 'requests' && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '20px', alignItems: 'start' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 380px', gap: '20px', alignItems: 'start' }}>
               <div>
                 {loading ? (
                   <div style={{ background: '#fff', borderRadius: '12px', padding: '40px', textAlign: 'center', color: '#9ca3af', border: '1px solid #e5e7eb' }}>Loading...</div>
@@ -686,10 +703,12 @@ function Dashboard({ resident, token, onLogout }) {
                   <RequestCard key={r.id} request={r} active={activeRequest && activeRequest.id === r.id} onClick={() => setActiveRequest(r)} />
                 ))}
               </div>
+              {!isMobile && (
               <div>
                 <div style={{ fontSize: '13px', fontWeight: '600', color: '#111827', marginBottom: '10px' }}>Quick submit</div>
                 <SubmitRequest token={token} resident={resident} onSubmit={handleNewRequest} />
               </div>
+              )}
             </div>
           )}
 
@@ -720,6 +739,33 @@ function Dashboard({ resident, token, onLogout }) {
         </div>
       </div>
 
+
+      {/* Mobile bottom tab bar */}
+      {isMobile && (
+        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '72px', backgroundColor: '#1B3A6B', borderTop: '1px solid rgba(255,255,255,0.15)', display: 'flex', zIndex: 200 }}>
+          {navItems.map(item => {
+            const isActive = activeTab === item.key;
+            const badge = item.key === 'requests' && openRequests.length > 0 ? openRequests.length : null;
+            const shortLabel = item.key === 'neighborhood' ? 'Area' : item.key === 'ptp' ? 'Pay' : item.key === 'requests' ? 'Requests' : item.key === 'submit' ? 'New' : 'History';
+            return (
+              <button key={item.key} onClick={() => setActiveTab(item.key)}
+                style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '3px', background: 'none', border: 'none', cursor: 'pointer', position: 'relative', padding: '8px 4px' }}>
+                <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: isActive ? '#14B8A6' : 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: isActive ? '#fff' : 'rgba(255,255,255,0.45)', transition: 'all 0.15s' }}>
+                  {item.key === 'requests' ? '=' : item.key === 'submit' ? '+' : item.key === 'history' ? 'H' : item.key === 'ptp' ? '$' : 'N'}
+                </div>
+                <span style={{ fontSize: '9px', fontWeight: isActive ? '700' : '400', color: isActive ? '#14B8A6' : 'rgba(255,255,255,0.4)', letterSpacing: '0.03em', textTransform: 'uppercase' }}>
+                  {shortLabel}
+                </span>
+                {badge && (
+                  <div style={{ position: 'absolute', top: '6px', right: '12px', width: '16px', height: '16px', backgroundColor: '#ef4444', borderRadius: '50%', fontSize: '9px', fontWeight: '700', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    {badge > 9 ? '9+' : badge}
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      )}
       {/* Video call overlay */}
       {videoRoom && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: '#0f1f3d', zIndex: 9999, display: 'flex', flexDirection: 'column' }}>
