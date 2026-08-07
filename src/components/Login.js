@@ -7,6 +7,12 @@ function Login({ onLogin }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
+  React.useEffect(() => {
+    const fn = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', fn);
+    return () => window.removeEventListener('resize', fn);
+  }, []);
 
   const handleSubmit = async () => {
     setError('');
@@ -27,9 +33,9 @@ function Login({ onLogin }) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', backgroundColor: '#F0F4F8', fontFamily: 'Arial, sans-serif' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: isMobile ? 'column' : 'row', backgroundColor: '#F0F4F8', fontFamily: "'Inter', system-ui, sans-serif" }}>
       {/* Left navy panel */}
-      <div style={{ width: '420px', minWidth: '420px', backgroundColor: '#1B3A6B', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '48px 40px' }}>
+      <div style={{ width: isMobile ? '100%' : '420px', minWidth: isMobile ? 'unset' : '420px', backgroundColor: '#1B3A6B', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: isMobile ? 'flex-start' : 'center', padding: isMobile ? '40px 28px 32px' : '48px 40px', flexShrink: 0 }}>
         <img src="https://i.imgur.com/OKIqq0K.png" alt="Servfixy" style={{ width: '220px', marginBottom: '32px' }} />
         <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: '14px', textAlign: 'center', lineHeight: '1.6' }}>
           Your maintenance requests, status updates, and service history — all in one place.
