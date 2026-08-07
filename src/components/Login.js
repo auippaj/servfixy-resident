@@ -53,7 +53,7 @@ function Login({ onLogin }) {
       </div>
 
       {/* Right login panel */}
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px' }}>
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: isMobile ? '28px 20px 48px' : '48px', backgroundColor: '#F0F4F8' }}>
         <div style={{ width: '100%', maxWidth: '440px' }}>
           <h1 style={{ fontSize: '24px', fontWeight: '700', color: '#111827', marginBottom: '6px' }}>Resident Portal</h1>
           <p style={{ fontSize: '14px', color: '#6b7280', marginBottom: '32px' }}>Sign in to manage your home maintenance</p>
