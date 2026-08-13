@@ -5,6 +5,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [smsConsent, setSmsConsent] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
@@ -21,7 +22,7 @@ function Login({ onLogin }) {
       const res = await fetch(`${API_URL}/api/residents/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password, smsConsent })
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || 'Login failed.'); setLoading(false); return; }
@@ -75,7 +76,7 @@ function Login({ onLogin }) {
             />
           </div>
 
-          <div style={{ marginBottom: '28px' }}>
+          <div style={{ marginBottom: '20px' }}>
             <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#111827', marginBottom: '6px' }}>Password</label>
             <input
               type="password"
@@ -85,6 +86,23 @@ function Login({ onLogin }) {
               onKeyDown={e => e.key === 'Enter' && handleSubmit()}
               style={{ width: '100%', padding: '12px 14px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', color: '#111827', backgroundColor: '#fff', boxSizing: 'border-box', outline: 'none' }}
             />
+          </div>
+
+          {/* SMS Consent -- required for Twilio A2P 10DLC compliance. Must be unchecked by default. */}
+          <div style={{ backgroundColor: '#f0fdfa', border: '1px solid #14B8A6', borderRadius: '8px', padding: '14px 16px', marginBottom: '24px' }}>
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={smsConsent}
+                onChange={e => setSmsConsent(e.target.checked)}
+                style={{ marginTop: '2px', width: '16px', height: '16px', flexShrink: 0, accentColor: '#14B8A6', cursor: 'pointer' }}
+              />
+              <span style={{ fontSize: '12px', color: '#134e4a', lineHeight: '1.6' }}>
+                <strong>Optional:</strong> I agree to receive SMS text notifications from Servfixy regarding my maintenance requests, appointment confirmations, and property updates. Message frequency varies (typically 1-5 messages per work order). Message and data rates may apply. Reply <strong>STOP</strong> to opt out at any time, <strong>HELP</strong> for assistance. Mobile information will not be shared with third parties for marketing. See our{' '}
+                <a href="https://servfixy.com/privacy" target="_blank" rel="noreferrer" style={{ color: '#0f766e', textDecoration: 'underline' }}>Privacy Policy</a>{' '}and{' '}
+                <a href="https://servfixy.com/terms" target="_blank" rel="noreferrer" style={{ color: '#0f766e', textDecoration: 'underline' }}>Terms of Use</a>.
+              </span>
+            </label>
           </div>
 
           <button
