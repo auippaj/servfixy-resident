@@ -69,14 +69,14 @@ function Login({ onLogin }) {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff', fontFamily: "'Inter', system-ui, sans-serif", padding: '8px 16px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#ffffff', fontFamily: "'Inter', system-ui, sans-serif", padding: '4px 16px' }}>
       <div style={{ width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
         {/* Logo — untouched */}
-        <img src="/servfixy-logo.png" alt="Servfixy" style={{ width: '420px', marginBottom: '10px' }} />
+        <img src="/servfixy-logo.png" alt="Servfixy" style={{ width: '420px', marginBottom: '0px' }} />
 
         {/* Heading */}
-        <h1 style={{ fontSize: '22px', fontWeight: '700', color: '#111827', marginBottom: '16px', alignSelf: 'flex-start' }}>{t.heading}</h1>
+        <h1 style={{ fontSize: '20px', fontWeight: '700', color: '#111827', marginBottom: '10px', alignSelf: 'flex-start' }}>{t.heading}</h1>
 
         {error && (
           <div style={{ backgroundColor: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '10px', padding: '8px 14px', fontSize: '13px', color: '#991b1b', marginBottom: '12px', width: '100%', boxSizing: 'border-box' }}>
@@ -131,7 +131,7 @@ function Login({ onLogin }) {
           </button>
           {['en', 'es'].map(l => (
             <button key={l} onClick={() => setLang(l)}
-              style={{ padding: '8px 16px', border: lang === l ? '2px solid #14B8A6' : '2px solid #e5e7eb', borderRadius: '50px', cursor: 'pointer', backgroundColor: lang === l ? '#14B8A6' : 'transparent', color: lang === l ? '#fff' : '#6b7280', fontWeight: '700', fontSize: '12px' }}>
+              style={{ padding: '4px 16px', border: lang === l ? '2px solid #14B8A6' : '2px solid #e5e7eb', borderRadius: '50px', cursor: 'pointer', backgroundColor: lang === l ? '#14B8A6' : 'transparent', color: lang === l ? '#fff' : '#6b7280', fontWeight: '700', fontSize: '12px' }}>
               {l.toUpperCase()}
             </button>
           ))}
