@@ -32,7 +32,7 @@ function Login({ onLogin }) {
       <div style={{ width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
         {/* Logo */}
-        <img src="https://i.imgur.com/nvDoU8X.png" alt="Servfixy" style={{ width: '280px', marginBottom: '36px' }} />
+        <img src="/servfixy-logo.png" alt="Servfixy" style={{ width: '280px', marginBottom: '36px' }} />
 
         {/* Heading */}
         <h1 style={{ fontSize: '26px', fontWeight: '700', color: '#111827', marginBottom: '28px', alignSelf: 'flex-start' }}>Sign in to Resident Portal</h1>
