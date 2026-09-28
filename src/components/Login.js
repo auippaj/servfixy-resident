@@ -73,7 +73,7 @@ function Login({ onLogin }) {
       <div style={{ width: '100%', maxWidth: '480px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
         {/* Logo — untouched */}
-        <img src="/servfixy-logo.png" alt="Servfixy" style={{ width: '420px', marginBottom: '0px' }} />
+        <img src="https://i.imgur.com/OPDKgyD.png" alt="Servfixy" style={{ width: '420px', marginBottom: '0px' }} />
 
         {/* Heading */}
         
