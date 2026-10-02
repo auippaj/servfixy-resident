@@ -700,7 +700,7 @@ function Dashboard({ resident, token, onLogout }) {
                     <button onClick={() => setActiveTab('submit')} style={{ marginTop: '16px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: '8px', padding: '10px 20px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>Submit a Request</button>
                   </div>
                 ) : openRequests.map(r => (
-                  <RequestCard key={r.id} request={r} active={activeRequest && activeRequest.id === r.id} onClick={() => setActiveRequest(r)} />
+                  <RequestCard key={r.id} request={r} active={activeRequest && activeRequest.id === r.id} onClick={() => setActiveRequest(r)} token={token} />
                 ))}
               </div>
               {!isMobile && (
@@ -727,7 +727,7 @@ function Dashboard({ resident, token, onLogout }) {
                   <div style={{ fontSize: '13px', color: '#6b7280', marginTop: '4px' }}>Completed requests will appear here.</div>
                 </div>
               ) : pastRequests.map(r => (
-                <RequestCard key={r.id} request={r} active={activeRequest && activeRequest.id === r.id} onClick={() => setActiveRequest(r)} past />
+                <RequestCard key={r.id} request={r} active={activeRequest && activeRequest.id === r.id} onClick={() => setActiveRequest(r)} past token={token} />
               ))}
             </div>
           )}
