@@ -1,4 +1,5 @@
 import React from 'react';
+import LsStatusBanner from './LsStatusBanner';
 
 const TOUCH_LABELS = [
   'Request acknowledged',
@@ -16,7 +17,7 @@ const STATUS_COLORS = {
   'Closed': { bg: '#f3f4f6', text: '#6b7280' }
 };
 
-function RequestCard({ request, active, onClick, past }) {
+function RequestCard({ request, active, onClick, past, token }) {
   const colors = STATUS_COLORS[request.status] || STATUS_COLORS['Submitted'];
   const touchpoints = request.touchpoints || [];
   const firedTouches = touchpoints.map(t => t.touch_number);
@@ -58,6 +59,9 @@ function RequestCard({ request, active, onClick, past }) {
           </div>
         </div>
       ) : null}
+
+      {/* Life Safety status (flagged requests only) */}
+      {!past && token && request.life_safety_flag && request.ls_flagged_at && <LsStatusBanner request={request} token={token} />}
 
       {/* Description */}
       {request.description && (
