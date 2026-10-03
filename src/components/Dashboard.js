@@ -700,6 +700,13 @@ function Dashboard({ resident, token, onLogout }) {
             </div>
           )}
 
+          {['requests', 'ptp', 'neighborhood', 'history'].includes(activeTab) && (
+            <button onClick={() => setActiveTab('home')}
+              style={{ background: 'none', border: 'none', color: '#1B3A6B', fontSize: '14px', fontWeight: '600', cursor: 'pointer', padding: 0, marginBottom: '14px' }}>
+              ← Back
+            </button>
+          )}
+
           {activeTab === 'home' && (
             <HelpHome token={token}
               onPickHome={(text) => { setPrefill(text || ''); setActiveTab('submit'); }}
@@ -717,7 +724,7 @@ function Dashboard({ resident, token, onLogout }) {
 
           {activeTab === 'submit' && (
             <div style={{ maxWidth: '620px' }}>
-              <SubmitRequest token={token} resident={resident} onSubmit={handleNewRequest} initialDescription={prefill} />
+              <SubmitRequest token={token} resident={resident} onSubmit={handleNewRequest} initialDescription={prefill} onBack={() => setActiveTab('home')} />
             </div>
           )}
 

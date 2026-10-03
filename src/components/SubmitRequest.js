@@ -100,7 +100,7 @@ const TIME_OPTIONS = [
   'Evening (5pm–8pm)'
 ];
 
-function SubmitRequest({ token, resident, onSubmit, initialDescription }) {
+function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }) {
   const [category, setCategory] = useState('');
   const [locationData, setLocationData] = useState(null);
   const [locationConfirmed, setLocationConfirmed] = useState(false);
@@ -113,6 +113,13 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription }) {
   const [phone, setPhone] = useState(resident.phone || '');
   const [isUrgent, setIsUrgent] = useState(false);
   const [issueType, setIssueType] = useState('');
+
+  // Back steps one screen at a time: location -> category -> out to the previous screen.
+  const handleBack = () => {
+    if (locationConfirmed) { setLocationConfirmed(false); setLocationData(null); }
+    else if (category) { setCategory(''); setIssueType(''); }
+    else if (onBack) onBack();
+  };
 
   const startListening = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -223,6 +230,13 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription }) {
 
   return (
     <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #e5e7eb', padding: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+
+      {onBack && (
+        <button onClick={handleBack}
+          style={{ alignSelf: 'flex-start', background: 'none', border: 'none', color: '#1B3A6B', fontSize: '14px', fontWeight: '600', cursor: 'pointer', padding: 0 }}>
+          ← Back
+        </button>
+      )}
 
       {error && (
         <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', padding: '10px 12px', fontSize: '13px', color: '#991b1b' }}>
