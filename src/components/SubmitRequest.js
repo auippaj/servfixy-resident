@@ -448,7 +448,7 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
       )}
 
       <div style={{ fontSize: '11px', color: '#9ca3af', textAlign: 'center' }}>
-        We'll confirm within 30 minutes and send your verification code.
+        We'll contact you within 1 hour and send your verification code.
       </div>
     </div>
   );
