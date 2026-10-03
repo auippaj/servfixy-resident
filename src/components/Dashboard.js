@@ -543,11 +543,11 @@ function Dashboard({ resident, token, onLogout }) {
 
   useEffect(() => {
     if (!resident?.id) return;
-    fetch(`${API_URL}/api/surveys/pending/${resident.id}`)
+    fetch(`${API_URL}/api/surveys/pending/${resident.id}`, { headers: { Authorization: `Bearer ${token}` } })
       .then(r => r.json())
       .then(data => { if (data.pending) setPendingSurvey(data.survey); })
       .catch(() => {});
-  }, [resident]);
+  }, [resident, token]);
 
   useEffect(() => {
     const handleVideoCall = async (e) => {
