@@ -29,6 +29,16 @@ export function suggestLane(text) {
   return best;
 }
 
+// Follow-up promise shown after a submission (3 PM property-local cutoff is decided by the server).
+function followUpMessage(lane, followUp) {
+  const when = followUp === 'today' ? 'today' : 'the next business day';
+  if (lane === 'community') {
+    return `We hear you, and we're sorry this is happening. Our Resident Success team will reach out to you ${when}, and we'll make sure your concerns are heard and escalated to the proper team member for resolution.`;
+  }
+  if (lane === 'account') return `Thanks for reaching out. Our Resident Success team will reach out to you ${when}.`;
+  return 'We will keep you updated in My Requests.';
+}
+
 const card = { background: '#fff', border: '1px solid #e2e8f0', borderRadius: '14px', padding: '20px' };
 const primaryBtn = { background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: '10px', padding: '14px 20px', fontSize: '15px', fontWeight: '700', cursor: 'pointer' };
 const ghostBtn = { background: '#fff', color: '#1B3A6B', border: '1px solid #cbd5e1', borderRadius: '10px', padding: '12px 16px', fontSize: '14px', fontWeight: '600', cursor: 'pointer' };
@@ -42,8 +52,10 @@ function HelpHome({ token, onPickHome, onPickPtp, onSeeRequests, onCaseCreated }
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [sentLs, setSentLs] = useState(false);
+  const [sentLane, setSentLane] = useState('');
+  const [followUp, setFollowUp] = useState('');
 
-  const reset = () => { setView('tiles'); setText(''); setChip(''); setSuggested(null); setChoosing(false); setError(''); setSentLs(false); };
+  const reset = () => { setView('tiles'); setText(''); setChip(''); setSuggested(null); setChoosing(false); setError(''); setSentLs(false); setSentLane(''); setFollowUp(''); };
 
   const send = async (lane, description) => {
     setError('');
@@ -57,6 +69,8 @@ function HelpHome({ token, onPickHome, onPickPtp, onSeeRequests, onCaseCreated }
       const data = await res.json();
       if (!res.ok) { setError(data.error || 'Something went wrong. Please try again.'); setSending(false); return; }
       setSentLs(!!data.life_safety);
+      setSentLane(lane);
+      setFollowUp(data.follow_up || '');
       setView('sent');
       if (onCaseCreated) onCaseCreated();
     } catch {
@@ -95,8 +109,8 @@ function HelpHome({ token, onPickHome, onPickPtp, onSeeRequests, onCaseCreated }
   );
 
   const Footer = () => (
-    <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '13px', color: '#6b7280' }}>
-      Fire, gas smell, or danger? <strong style={{ color: '#111827' }}>Call 911 first.</strong>
+    <div style={{ marginTop: '24px', textAlign: 'center', fontSize: '13px', color: '#6b7280', lineHeight: 1.5 }}>
+      <strong style={{ color: '#111827' }}>Call 911 for:</strong> fire, smoke, or gas; a medical emergency or injury; a crime or threat; or electrical danger such as sparking or water near outlets.
     </div>
   );
 
@@ -107,7 +121,7 @@ function HelpHome({ token, onPickHome, onPickPtp, onSeeRequests, onCaseCreated }
           <div style={{ fontSize: '48px', marginBottom: '8px' }}>✅</div>
           <div style={{ fontSize: '20px', fontWeight: '800', color: '#111827', marginBottom: '6px' }}>Got it!</div>
           <div style={{ fontSize: '14px', color: '#6b7280', marginBottom: '20px' }}>
-            {sentLs ? 'We are alerting our on-call team now. If you smell gas, see fire or smoke, or anyone is in danger, call 911 right away.' : 'We will keep you updated in My Requests.'}
+            {sentLs ? 'We are alerting our on-call team now. If you smell gas, see fire or smoke, or anyone is in danger, call 911 right away.' : followUpMessage(sentLane, followUp)}
           </div>
           <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <button onClick={onSeeRequests} style={primaryBtn}>See My Requests</button>
