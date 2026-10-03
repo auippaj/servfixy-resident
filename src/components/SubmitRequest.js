@@ -100,11 +100,11 @@ const TIME_OPTIONS = [
   'Evening (5pm–8pm)'
 ];
 
-function SubmitRequest({ token, resident, onSubmit }) {
+function SubmitRequest({ token, resident, onSubmit, initialDescription }) {
   const [category, setCategory] = useState('');
   const [locationData, setLocationData] = useState(null);
   const [locationConfirmed, setLocationConfirmed] = useState(false);
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(initialDescription || '');
   const [preferredTime, setPreferredTime] = useState('Any time — urgent');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import SubmitRequest from './SubmitRequest';
 import RequestCard from './RequestCard';
+import HelpHome from './HelpHome';
+import CaseList from './CaseList';
 
 const API_URL = process.env.REACT_APP_API_URL;
 const GOOGLE_KEY = 'AIzaSyB0HtcdGObY0irWO1sIUVT6e4hdcfdFkL0';
@@ -480,7 +482,9 @@ function Dashboard({ resident, token, onLogout }) {
   const [activeRequest, setActiveRequest] = useState(null);
   const [rvcData, setRvcData] = useState(null);
   const [pendingSurvey, setPendingSurvey] = useState(null);
-  const [activeTab, setActiveTab] = useState('requests');
+  const [activeTab, setActiveTab] = useState('home');
+  const [cases, setCases] = useState([]);
+  const [prefill, setPrefill] = useState('');
   const [videoRoom, setVideoRoom] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const videoRef = useRef(null); // eslint-disable-line no-unused-vars
@@ -512,11 +516,22 @@ function Dashboard({ resident, token, onLogout }) {
     }
   }, [token]);
 
+  const fetchCases = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/cases/mine`, { headers: { Authorization: `Bearer ${token}` } });
+      const data = await res.json();
+      if (data.cases) setCases(data.cases);
+    } catch (err) {
+      console.error('Failed to fetch cases:', err);
+    }
+  }, [token]);
+
   useEffect(() => {
     fetchRequests();
-    const interval = setInterval(fetchRequests, 30000);
+    fetchCases();
+    const interval = setInterval(() => { fetchRequests(); fetchCases(); }, 30000);
     return () => clearInterval(interval);
-  }, [fetchRequests]);
+  }, [fetchRequests, fetchCases]);
 
   useEffect(() => {
     const channel = supabase
@@ -557,6 +572,7 @@ function Dashboard({ resident, token, onLogout }) {
   const handleNewRequest = (newRequest, rvc) => {
     setRvcData({ request: newRequest, rvc });
     fetchRequests();
+    fetchCases();
     setActiveTab('requests');
   };
 
@@ -565,15 +581,13 @@ function Dashboard({ resident, token, onLogout }) {
   const initials = resident.name ? resident.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'R';
 
   const navItems = [
+    { key: 'home', label: 'How can we help?', icon: '🙋' },
     { key: 'requests', label: 'My Requests', icon: '📋' },
-    { key: 'submit', label: 'New Request', icon: '➕' },
-    { key: 'history', label: 'History', icon: '🕐' },
-    { key: 'ptp', label: 'Promise to Pay', icon: '🤝' },
     { key: 'neighborhood', label: 'My Neighborhood', icon: '🏘️' },
   ];
 
   const pageTitle = {
-    requests: 'My Requests', submit: 'Submit a Request', history: 'Request History',
+    home: 'How can we help?', requests: 'My Requests', submit: 'My Home: Fix Something', history: 'Request History',
     ptp: 'Promise to Pay', neighborhood: 'My Neighborhood'
   };
 
@@ -686,35 +700,24 @@ function Dashboard({ resident, token, onLogout }) {
             </div>
           )}
 
-          {/* REQUESTS TAB */}
+          {activeTab === 'home' && (
+            <HelpHome token={token}
+              onPickHome={(text) => { setPrefill(text || ''); setActiveTab('submit'); }}
+              onPickPtp={() => setActiveTab('ptp')}
+              onSeeRequests={() => setActiveTab('requests')}
+              onCaseCreated={fetchCases} />
+          )}
+
+          {/* REQUESTS TAB: one list for every lane */}
           {activeTab === 'requests' && (
-            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 380px', gap: '20px', alignItems: 'start' }}>
-              <div>
-                {loading ? (
-                  <div style={{ background: '#fff', borderRadius: '12px', padding: '40px', textAlign: 'center', color: '#9ca3af', border: '1px solid #e5e7eb' }}>Loading...</div>
-                ) : openRequests.length === 0 ? (
-                  <div style={{ background: '#fff', borderRadius: '12px', padding: '48px', textAlign: 'center', border: '1px solid #e5e7eb' }}>
-                    <div style={{ fontSize: '32px', marginBottom: '10px' }}>✅</div>
-                    <div style={{ fontSize: '14px', fontWeight: '600', color: '#111827' }}>No active requests</div>
-                    <div style={{ fontSize: '13px', color: '#6b7280', marginTop: '4px' }}>All clear! Submit a new request if something needs attention.</div>
-                    <button onClick={() => setActiveTab('submit')} style={{ marginTop: '16px', background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: '8px', padding: '10px 20px', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>Submit a Request</button>
-                  </div>
-                ) : openRequests.map(r => (
-                  <RequestCard key={r.id} request={r} active={activeRequest && activeRequest.id === r.id} onClick={() => setActiveRequest(r)} token={token} />
-                ))}
-              </div>
-              {!isMobile && (
-              <div>
-                <div style={{ fontSize: '13px', fontWeight: '600', color: '#111827', marginBottom: '10px' }}>Quick submit</div>
-                <SubmitRequest token={token} resident={resident} onSubmit={handleNewRequest} />
-              </div>
-              )}
-            </div>
+            <CaseList cases={cases} requests={requests} doneStatuses={PAST_STATUSES}
+              activeRequest={activeRequest} setActiveRequest={setActiveRequest}
+              token={token} loading={loading} onStart={() => setActiveTab('home')} />
           )}
 
           {activeTab === 'submit' && (
             <div style={{ maxWidth: '620px' }}>
-              <SubmitRequest token={token} resident={resident} onSubmit={handleNewRequest} />
+              <SubmitRequest token={token} resident={resident} onSubmit={handleNewRequest} initialDescription={prefill} />
             </div>
           )}
 
@@ -746,12 +749,12 @@ function Dashboard({ resident, token, onLogout }) {
           {navItems.map(item => {
             const isActive = activeTab === item.key;
             const badge = item.key === 'requests' && openRequests.length > 0 ? openRequests.length : null;
-            const shortLabel = item.key === 'neighborhood' ? 'Area' : item.key === 'ptp' ? 'Pay' : item.key === 'requests' ? 'Requests' : item.key === 'submit' ? 'New' : 'History';
+            const shortLabel = item.key === 'neighborhood' ? 'Area' : item.key === 'home' ? 'Help' : 'Requests';
             return (
               <button key={item.key} onClick={() => setActiveTab(item.key)}
                 style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '3px', background: 'none', border: 'none', cursor: 'pointer', position: 'relative', padding: '8px 4px' }}>
                 <div style={{ width: '32px', height: '32px', borderRadius: '8px', backgroundColor: isActive ? '#14B8A6' : 'rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', color: isActive ? '#fff' : 'rgba(255,255,255,0.45)', transition: 'all 0.15s' }}>
-                  {item.key === 'requests' ? '=' : item.key === 'submit' ? '+' : item.key === 'history' ? 'H' : item.key === 'ptp' ? '$' : 'N'}
+                  {item.key === 'home' ? '?' : item.key === 'requests' ? '=' : 'N'}
                 </div>
                 <span style={{ fontSize: '9px', fontWeight: isActive ? '700' : '400', color: isActive ? '#14B8A6' : 'rgba(255,255,255,0.4)', letterSpacing: '0.03em', textTransform: 'uppercase' }}>
                   {shortLabel}
