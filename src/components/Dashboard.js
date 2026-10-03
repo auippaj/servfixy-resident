@@ -594,10 +594,10 @@ function Dashboard({ resident, token, onLogout }) {
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#F0F4F8', fontFamily: 'Arial, sans-serif' }}>
 
       {/* Left Sidebar -- desktop only */}
-      {!isMobile && <div style={{ width: '240px', minWidth: '240px', backgroundColor: '#1B3A6B', display: 'flex', flexDirection: 'column', height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 100 }}>
-        <div style={{ padding: '20px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-          <img src="https://i.imgur.com/OKIqq0K.png" alt="Servfixy" style={{ width: '160px', height: 'auto' }} />
-          <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px', marginTop: '4px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Resident Portal</div>
+      {!isMobile && <div style={{ width: '240px', minWidth: '240px', backgroundColor: '#185FA5', display: 'flex', flexDirection: 'column', height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 100 }}>
+        <div style={{ padding: '20px', background: '#ffffff', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+          <img src="https://i.imgur.com/OPDKgyD.png" alt="Servfixy" style={{ width: '160px', height: 'auto' }} />
+          <div style={{ color: '#185FA5', fontSize: '11px', fontWeight: '700', marginTop: '4px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Resident Portal</div>
         </div>
 
         <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -607,7 +607,7 @@ function Dashboard({ resident, token, onLogout }) {
             </div>
             <div>
               <div style={{ color: '#fff', fontSize: '13px', fontWeight: '600' }}>{resident.name}</div>
-              <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px' }}>Unit {resident.unit_number}</div>
+              <div style={{ color: 'rgba(255,255,255,0.85)', fontSize: '11px' }}>Unit {resident.unit_number}</div>
             </div>
           </div>
           <div style={{ marginTop: '10px', background: 'rgba(255,255,255,0.07)', borderRadius: '6px', padding: '8px 10px' }}>
@@ -623,8 +623,8 @@ function Dashboard({ resident, token, onLogout }) {
               <button key={item.key} onClick={() => setActiveTab(item.key)}
                 style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
                   padding: '10px 12px', borderRadius: '8px', border: 'none', cursor: 'pointer', marginBottom: '2px',
-                  backgroundColor: isActive ? 'rgba(20,184,166,0.15)' : 'transparent',
-                  color: isActive ? '#14B8A6' : 'rgba(255,255,255,0.65)',
+                  backgroundColor: isActive ? 'rgba(255,255,255,0.18)' : 'transparent',
+                  color: isActive ? '#ffffff' : 'rgba(255,255,255,0.9)',
                   fontSize: '13px', fontWeight: isActive ? '600' : '400', textAlign: 'left' }}>
                 <span style={{ fontSize: '15px' }}>{item.icon}</span>
                 {item.label}
@@ -650,7 +650,7 @@ function Dashboard({ resident, token, onLogout }) {
       <div style={{ marginLeft: isMobile ? 0 : '240px', flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh', paddingBottom: isMobile ? '72px' : 0 }}>
 
         {isMobile ? (
-          <div style={{ backgroundColor: '#1B3A6B', padding: '0 20px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 50 }}>
+          <div style={{ backgroundColor: '#185FA5', padding: '0 20px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 50 }}>
             <img src="https://i.imgur.com/OKIqq0K.png" alt="Servfixy" style={{ height: '28px', objectFit: 'contain' }} />
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
@@ -751,7 +751,7 @@ function Dashboard({ resident, token, onLogout }) {
 
       {/* Mobile bottom tab bar */}
       {isMobile && (
-        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '72px', backgroundColor: '#1B3A6B', borderTop: '1px solid rgba(255,255,255,0.15)', display: 'flex', zIndex: 200 }}>
+        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, height: '72px', backgroundColor: '#185FA5', borderTop: '1px solid rgba(255,255,255,0.15)', display: 'flex', zIndex: 200 }}>
           {navItems.map(item => {
             const isActive = activeTab === item.key;
             const badge = item.key === 'requests' && openRequests.length > 0 ? openRequests.length : null;
