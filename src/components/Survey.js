@@ -60,16 +60,14 @@ export default function Survey() {
     if (!rating) return;
     setSubmitting(true);
     try {
-      await fetch(`${API}/service-requests/${srId}/survey`, {
+      const res = await fetch(`${API}/service-requests/${srId}/survey`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          rating,
-          feedback_text: feedback,
-          resident_id: info?.resident_id || null
-        })
+        body: JSON.stringify({ rating, feedback_text: feedback })
       });
-      setSubmitted(true);
+      if (res.status === 409) setAlreadyDone(true);
+      else if (!res.ok) alert('Failed to submit. Please try again.');
+      else setSubmitted(true);
     } catch {
       alert('Failed to submit. Please try again.');
     }
@@ -168,11 +166,11 @@ export default function Survey() {
           {info?.unit_number && (
             <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)' }}>Unit {info.unit_number}</div>
           )}
-          {(info?.tech_first || info?.tech_last) && (
+          {info?.tech_first && (
             <div style={{ marginTop: '12px', backgroundColor: 'rgba(255,255,255,0.1)', borderRadius: '10px', padding: '10px 14px', display: 'inline-block' }}>
               <div style={{ fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginBottom: '2px' }}>Your technician</div>
               <div style={{ fontSize: '15px', fontWeight: '700', color: '#14B8A6' }}>
-                {info.tech_first} {info.tech_last}
+                {info.tech_first}
               </div>
             </div>
           )}
