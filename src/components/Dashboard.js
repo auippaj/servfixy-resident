@@ -482,6 +482,7 @@ function Dashboard({ resident, token, onLogout }) {
   const [rvcData, setRvcData] = useState(null);
   const [pendingSurvey, setPendingSurvey] = useState(null);
   const [activeTab, setActiveTab] = useState('home');
+  const [sidebarHidden, setSidebarHidden] = useState(false);
   const [cases, setCases] = useState([]);
   const [prefill, setPrefill] = useState('');
   const [videoRoom, setVideoRoom] = useState(null);
@@ -594,10 +595,14 @@ function Dashboard({ resident, token, onLogout }) {
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#F0F4F8', fontFamily: 'Arial, sans-serif' }}>
 
       {/* Left Sidebar -- desktop only */}
-      {!isMobile && <div style={{ width: '240px', minWidth: '240px', backgroundColor: '#185FA5', display: 'flex', flexDirection: 'column', height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 100 }}>
+      {!isMobile && sidebarHidden && <button onClick={() => setSidebarHidden(false)} title='Show sidebar' style={{ position: 'fixed', left: 0, top: '14px', zIndex: 200, background: '#185FA5', color: '#ffffff', border: 'none', borderRadius: '0 8px 8px 0', padding: '10px 12px', fontSize: '14px', fontWeight: '700', cursor: 'pointer', boxShadow: '2px 2px 8px rgba(0,0,0,0.25)' }}>{'>>'}</button>}
+      {!isMobile && !sidebarHidden && <div style={{ width: '240px', minWidth: '240px', backgroundColor: '#185FA5', display: 'flex', flexDirection: 'column', height: '100vh', position: 'fixed', left: 0, top: 0, zIndex: 100 }}>
         <div style={{ padding: '20px', background: '#ffffff', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
           <img src="https://i.imgur.com/OPDKgyD.png" alt="Servfixy" style={{ width: '160px', height: 'auto' }} />
           <div style={{ color: '#185FA5', fontSize: '11px', fontWeight: '700', marginTop: '4px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Resident Portal</div>
+        </div>
+        <div style={{ padding: '8px 12px', display: 'flex', justifyContent: 'flex-end', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+          <button onClick={() => setSidebarHidden(true)} title='Hide sidebar' style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer', fontSize: '14px', fontWeight: '700', padding: '4px 8px', lineHeight: 1, borderRadius: '4px' }}>{'<<'}</button>
         </div>
 
         <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
@@ -647,7 +652,7 @@ function Dashboard({ resident, token, onLogout }) {
       </div>}
 
       {/* Main content */}
-      <div style={{ marginLeft: isMobile ? 0 : '240px', flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh', paddingBottom: isMobile ? '72px' : 0 }}>
+      <div style={{ marginLeft: isMobile || sidebarHidden ? 0 : '240px', flex: 1, display: 'flex', flexDirection: 'column', minHeight: '100vh', paddingBottom: isMobile ? '72px' : 0 }}>
 
         {isMobile ? (
           <div style={{ backgroundColor: '#185FA5', padding: '0 20px', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 50 }}>
