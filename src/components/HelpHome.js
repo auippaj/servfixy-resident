@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
+import MicTextarea from './MicTextarea';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -41,35 +42,6 @@ function HelpHome({ token, onPickHome, onPickPtp, onSeeRequests, onCaseCreated }
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [sentLs, setSentLs] = useState(false);
-  const [listening, setListening] = useState(false);
-  const recRef = useRef(null);
-  const SpeechRec = typeof window !== 'undefined' ? (window.SpeechRecognition || window.webkitSpeechRecognition) : null;
-
-  useEffect(() => () => { if (recRef.current) { try { recRef.current.stop(); } catch (e) { /* already stopped */ } } }, []);
-
-  const stopMic = () => { if (recRef.current) { try { recRef.current.stop(); } catch (e) { /* already stopped */ } } setListening(false); };
-
-  const toggleMic = () => {
-    if (listening) { stopMic(); return; }
-    setError('');
-    const rec = new SpeechRec();
-    rec.lang = navigator.language || 'en-US';
-    rec.interimResults = true;
-    rec.continuous = false;
-    const base = text.trim() ? text.trim() + ' ' : '';
-    rec.onresult = (e) => {
-      let spoken = '';
-      for (let i = 0; i < e.results.length; i++) spoken += e.results[i][0].transcript;
-      setText(base + spoken);
-    };
-    rec.onerror = (e) => {
-      setListening(false);
-      setError(e.error === 'not-allowed' ? 'Please allow microphone access, or type instead.' : 'We could not hear you. Please try again or type instead.');
-    };
-    rec.onend = () => setListening(false);
-    recRef.current = rec;
-    try { rec.start(); setListening(true); } catch (e) { setListening(false); }
-  };
 
   const reset = () => { setView('tiles'); setText(''); setChip(''); setSuggested(null); setChoosing(false); setError(''); setSentLs(false); };
 
@@ -100,7 +72,6 @@ function HelpHome({ token, onPickHome, onPickPtp, onSeeRequests, onCaseCreated }
   };
 
   const continueFromBox = () => {
-    stopMic();
     const t = text.trim();
     if (t.length < 3) { setError('Tell us a little about what is going on.'); return; }
     setError('');
@@ -171,8 +142,7 @@ function HelpHome({ token, onPickHome, onPickPtp, onSeeRequests, onCaseCreated }
               </button>
             ))}
           </div>
-          <textarea value={text} onChange={e => setText(e.target.value)} placeholder="Tell us more (optional)"
-            style={{ width: '100%', boxSizing: 'border-box', height: '96px', padding: '12px', border: '1px solid #cbd5e1', borderRadius: '10px', fontSize: '15px', resize: 'none', fontFamily: 'inherit' }} />
+          <MicTextarea value={text} onChange={setText} placeholder="Tell us more (optional)" height={96} />
           {view === 'community' && <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '8px' }}>🔒 Your name is never shared with a neighbor.</div>}
           {error && <div style={{ color: '#991b1b', fontSize: '13px', marginTop: '10px' }}>{error}</div>}
           <button onClick={submit} disabled={sending} style={{ ...primaryBtn, width: '100%', marginTop: '16px', opacity: sending ? 0.7 : 1 }}>{sending ? 'Sending...' : 'Send'}</button>
@@ -223,17 +193,7 @@ function HelpHome({ token, onPickHome, onPickPtp, onSeeRequests, onCaseCreated }
       </div>
       <div style={{ ...card, marginTop: '20px' }}>
         <div style={{ fontSize: '15px', fontWeight: '700', color: '#111827', marginBottom: '10px' }}>Not sure? Tell us.</div>
-        <div style={{ position: 'relative' }}>
-          <textarea value={text} onChange={e => setText(e.target.value)} placeholder={listening ? 'Listening... go ahead and speak' : 'Tell us what is going on'}
-            style={{ width: '100%', boxSizing: 'border-box', height: '84px', padding: '12px 60px 12px 12px', border: listening ? '2px solid #ef4444' : '1px solid #cbd5e1', borderRadius: '10px', fontSize: '15px', resize: 'none', fontFamily: 'inherit' }} />
-          {SpeechRec && (
-            <button onClick={toggleMic} aria-label={listening ? 'Stop listening' : 'Speak instead of typing'}
-              style={{ position: 'absolute', right: '10px', bottom: '10px', width: '44px', height: '44px', borderRadius: '50%', border: 'none', cursor: 'pointer', fontSize: '20px',
-                background: listening ? '#ef4444' : '#1B3A6B', color: '#fff' }}>
-              {listening ? '⏹' : '🎤'}
-            </button>
-          )}
-        </div>
+        <MicTextarea value={text} onChange={setText} placeholder="Tell us what is going on" height={84} />
         {error && <div style={{ color: '#991b1b', fontSize: '13px', marginTop: '8px' }}>{error}</div>}
         <button onClick={continueFromBox} style={{ ...primaryBtn, width: '100%', marginTop: '12px' }}>Continue</button>
       </div>

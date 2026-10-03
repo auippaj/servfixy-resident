@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import SubmitRequest from './SubmitRequest';
 import RequestCard from './RequestCard';
 import HelpHome from './HelpHome';
+import MicTextarea from './MicTextarea';
 import CaseList from './CaseList';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -231,9 +232,7 @@ function PTPPortal({ resident, token }) {
           {/* Notes */}
           <div style={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '20px', marginBottom: '20px' }}>
             <div style={{ fontSize: '12px', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>Notes (optional)</div>
-            <textarea value={notes} onChange={e => setNotes(e.target.value)}
-              placeholder="Any additional context for your property manager..."
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '13px', color: '#374151', height: '80px', resize: 'none', boxSizing: 'border-box' }} />
+            <MicTextarea value={notes} onChange={setNotes} placeholder="Any additional context for your property manager..." height={88} fontSize={13} border="1px solid #e2e8f0" radius="8px" />
           </div>
 
           <button onClick={handleSubmit} disabled={submitting}
