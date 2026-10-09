@@ -253,7 +253,7 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
 
       <div>
         <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>
-          Mobile number <span style={{ fontWeight: '400', color: '#9ca3af' }}>(for SMS updates)</span>
+          Mobile number <span style={{ fontWeight: '400', color: '#6b7280' }}>(for SMS updates)</span>
         </label>
         <input
           type="tel"

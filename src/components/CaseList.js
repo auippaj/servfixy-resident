@@ -29,7 +29,7 @@ function CaseCard({ item }) {
 function CaseList({ cases, requests, doneStatuses, activeRequest, setActiveRequest, token, loading, onStart }) {
   const [showDone, setShowDone] = useState(false);
   if (loading) {
-    return <div style={{ background: '#fff', borderRadius: '12px', padding: '40px', textAlign: 'center', color: '#9ca3af', border: '1px solid #e5e7eb' }}>Loading...</div>;
+    return <div style={{ background: '#fff', borderRadius: '12px', padding: '40px', textAlign: 'center', color: '#6b7280', border: '1px solid #e5e7eb' }}>Loading...</div>;
   }
 
   const reqById = {};

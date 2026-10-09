@@ -122,7 +122,7 @@ function RequestCard({ request, active, onClick, past, token }) {
               📹 Join Video Call — Tech is Here
             </button>
           ) : (
-            <div style={{ width: '100%', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '10px', color: '#9ca3af', fontSize: '12px', textAlign: 'center' }}>
+            <div style={{ width: '100%', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '8px', padding: '10px', color: '#6b7280', fontSize: '12px', textAlign: 'center' }}>
               📹 Video call available when tech checks in
             </div>
           )}

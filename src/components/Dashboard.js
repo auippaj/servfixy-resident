@@ -162,7 +162,7 @@ function PTPPortal({ resident, token }) {
             <div style={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '20px', marginBottom: '16px' }}>
               <div style={{ fontSize: '12px', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '12px' }}>Payment Date</div>
               {loadingDates ? (
-                <div style={{ color: '#94a3b8', fontSize: '13px' }}>Loading available dates...</div>
+                <div style={{ color: '#64748b', fontSize: '13px' }}>Loading available dates...</div>
               ) : availableDates.length === 0 ? (
                 <div style={{ backgroundColor: '#fef9c3', borderRadius: '8px', padding: '12px', fontSize: '13px', color: '#854d0e' }}>
                   No dates available this month. Please contact your property manager.
@@ -250,7 +250,7 @@ function PTPPortal({ resident, token }) {
       {view === 'history' && (
         <div>
           {loadingRequests ? (
-            <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '40px', textAlign: 'center', color: '#94a3b8', border: '1px solid #e2e8f0' }}>Loading...</div>
+            <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '40px', textAlign: 'center', color: '#64748b', border: '1px solid #e2e8f0' }}>Loading...</div>
           ) : myRequests.length === 0 ? (
             <div style={{ backgroundColor: '#fff', borderRadius: '12px', padding: '48px', textAlign: 'center', border: '1px solid #e2e8f0' }}>
               <div style={{ fontSize: '32px', marginBottom: '10px' }}>🤝</div>
@@ -276,21 +276,21 @@ function PTPPortal({ resident, token }) {
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
                 <div>
-                  <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Amount</div>
+                  <div style={{ fontSize: '10px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Amount</div>
                   <div style={{ fontSize: '15px', fontWeight: '800', color: '#1B3A6B', marginTop: '2px' }}>
                     ${parseFloat(req.requested_amount || 0).toFixed(2)}
                   </div>
                 </div>
                 {req.requested_date && (
                   <div>
-                    <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Date</div>
+                    <div style={{ fontSize: '10px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Date</div>
                     <div style={{ fontSize: '13px', fontWeight: '600', color: '#374151', marginTop: '2px' }}>
                       {new Date(req.requested_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </div>
                   </div>
                 )}
                 <div>
-                  <div style={{ fontSize: '10px', color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Method</div>
+                  <div style={{ fontSize: '10px', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Method</div>
                   <div style={{ fontSize: '13px', fontWeight: '600', color: '#374151', marginTop: '2px' }}>{req.payment_method || '—'}</div>
                 </div>
               </div>
@@ -438,9 +438,9 @@ function MyNeighborhood({ resident }) {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     {place.rating && (
                       <>
-                        <span style={{ color: '#f59e0b', fontSize: '12px' }}>{stars(place.rating)}</span>
+                        <span style={{ color: '#b45309', fontSize: '12px' }}>{stars(place.rating)}</span>
                         <span style={{ fontSize: '12px', fontWeight: '600', color: '#374151' }}>{place.rating}</span>
-                        {place.user_ratings_total && <span style={{ fontSize: '11px', color: '#94a3b8' }}>({place.user_ratings_total})</span>}
+                        {place.user_ratings_total && <span style={{ fontSize: '11px', color: '#64748b' }}>({place.user_ratings_total})</span>}
                       </>
                     )}
                     {place.open_now !== undefined && (
@@ -456,7 +456,7 @@ function MyNeighborhood({ resident }) {
                   </a>
                 </div>
                 {place.distance && (
-                  <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '6px' }}>{place.distance} away</div>
+                  <div style={{ fontSize: '11px', color: '#64748b', marginTop: '6px' }}>{place.distance} away</div>
                 )}
               </div>
             </div>
@@ -602,7 +602,7 @@ function Dashboard({ resident, token, onLogout }) {
           <div style={{ color: '#185FA5', fontSize: '11px', fontWeight: '700', marginTop: '4px', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Resident Portal</div>
         </div>
         <div style={{ padding: '8px 12px', display: 'flex', justifyContent: 'flex-end', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
-          <button onClick={() => setSidebarHidden(true)} title='Hide sidebar' style={{ background: 'none', border: 'none', color: '#ffffff', cursor: 'pointer', fontSize: '14px', fontWeight: '700', padding: '4px 8px', lineHeight: 1, borderRadius: '4px' }}>{'<<'}</button>
+          <button onClick={() => setSidebarHidden(true)} title='Hide sidebar' style={{ background: 'none', border: 'none', color: '#111827', cursor: 'pointer', fontSize: '14px', fontWeight: '700', padding: '4px 8px', lineHeight: 1, borderRadius: '4px' }}>{'<<'}</button>
         </div>
 
         <div style={{ padding: '16px 20px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
