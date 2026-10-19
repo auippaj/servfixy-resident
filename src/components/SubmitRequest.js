@@ -417,7 +417,7 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
               <label style={{ width: '72px', height: '72px', border: '1.5px dashed #d1d5db', borderRadius: '8px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: '11px', color: '#9ca3af', gap: '4px' }}>
                 <span style={{ fontSize: '22px' }}>📷</span>
                 Add
-                <input type="file" accept="image/*" multiple capture="environment" onChange={handlePhotoAdd} style={{ display: 'none' }} />
+                <input type="file" accept="image/*" multiple onChange={handlePhotoAdd} style={{ display: 'none' }} />
               </label>
             )}
           </div>
