@@ -483,6 +483,7 @@ function Dashboard({ resident, token, onLogout }) {
   const [pendingSurvey, setPendingSurvey] = useState(null);
   const [activeTab, setActiveTab] = useState('home');
   const [sidebarHidden, setSidebarHidden] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [cases, setCases] = useState([]);
   const [prefill, setPrefill] = useState('');
   const [videoRoom, setVideoRoom] = useState(null);
@@ -659,7 +660,24 @@ function Dashboard({ resident, token, onLogout }) {
             <img src="https://i.imgur.com/OKIqq0K.png" alt="Servfixy" style={{ height: '28px', objectFit: 'contain' }} />
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#22c55e' }} />
-              <div style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#14B8A6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '700', color: '#fff' }}>{initials}</div>
+              <div style={{ position: 'relative' }}>
+                <button onClick={() => setUserMenuOpen(o => !o)} aria-label="Account menu"
+                  style={{ width: '32px', height: '32px', borderRadius: '50%', backgroundColor: '#14B8A6', border: 'none', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: '700', color: '#fff' }}>{initials}</button>
+                {userMenuOpen && (
+                  <>
+                    <div onClick={() => setUserMenuOpen(false)} style={{ position: 'fixed', inset: 0, zIndex: 90 }} />
+                    <div style={{ position: 'absolute', right: 0, top: '42px', zIndex: 100, minWidth: '200px', backgroundColor: '#fff', borderRadius: '10px', boxShadow: '0 8px 24px rgba(0,0,0,0.2)', padding: '12px', border: '1px solid #e2e8f0' }}>
+                      <div style={{ fontSize: '13px', fontWeight: '700', color: '#111827' }}>{resident.name}</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px' }}>Unit {resident.unit_number}</div>
+                      <div style={{ fontSize: '12px', color: '#6b7280', marginBottom: '10px' }}>{resident.property_name}</div>
+                      <button onClick={() => { setUserMenuOpen(false); onLogout(); }}
+                        style={{ width: '100%', padding: '10px 12px', backgroundColor: '#185FA5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: '700', cursor: 'pointer' }}>
+                        Sign out
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         ) : (
