@@ -3,9 +3,11 @@ import { registerPushToken, onForegroundMessage } from './firebase';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Survey from './components/Survey';
+import SmsConsent from './components/SmsConsent';
 import './App.css';
 
 const isSurvey = window.location.pathname === '/survey';
+const isSmsConsent = /^\/sms-consent\/?$/.test(window.location.pathname);
 
 function App() {
   const [resident, setResident] = useState(null);
@@ -15,7 +17,7 @@ function App() {
   useEffect(() => { setAuthReady(true); }, []);
 
   useEffect(() => {
-    if (isSurvey) return;
+    if (isSurvey || isSmsConsent) return;
     const savedToken = localStorage.getItem('residentToken');
     const savedResident = localStorage.getItem('residentData');
     if (savedToken && savedResident) {
@@ -41,6 +43,7 @@ function App() {
   }, []);
 
   if (isSurvey) return <Survey />;
+  if (isSmsConsent) return <SmsConsent />;
 
   const speakWelcome = async (residentName) => {
     try {

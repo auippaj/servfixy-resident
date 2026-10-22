@@ -271,7 +271,11 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
             onChange={e => setSmsConsent(e.target.checked)}
             style={{ marginTop: '2px' }}
           />
-          <span>Text me updates about this request. Message and data rates may apply. Reply STOP to opt out.</span>
+          <span>
+            <strong>Optional:</strong> I agree to receive SMS text notifications from Servfixy about this maintenance request and appointment confirmations. Message frequency varies (typically 1-5 messages per work order). Message and data rates may apply. Reply <strong>STOP</strong> to opt out at any time, <strong>HELP</strong> for assistance. Mobile information will not be shared with third parties for marketing. See our{' '}
+            <a href="https://servfixy.com/privacy" target="_blank" rel="noreferrer" style={{ color: '#0f766e', textDecoration: 'underline' }}>Privacy Policy</a> and{' '}
+            <a href="https://servfixy.com/terms" target="_blank" rel="noreferrer" style={{ color: '#0f766e', textDecoration: 'underline' }}>Terms of Use</a>.
+          </span>
         </label>
       </div>
 
