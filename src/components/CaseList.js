@@ -26,7 +26,7 @@ function CaseCard({ item }) {
 }
 
 // One list for every lane. Maintenance items keep the rich request card (tracker, Life Safety banner).
-function CaseList({ cases, requests, doneStatuses, activeRequest, setActiveRequest, token, loading, onStart }) {
+function CaseList({ cases, requests, doneStatuses, activeRequest, setActiveRequest, token, loading, onStart, requestsError, onRetry }) {
   const [showDone, setShowDone] = useState(false);
   if (loading) {
     return <div style={{ background: '#fff', borderRadius: '12px', padding: '40px', textAlign: 'center', color: '#6b7280', border: '1px solid #e5e7eb' }}>Loading...</div>;
@@ -62,6 +62,12 @@ function CaseList({ cases, requests, doneStatuses, activeRequest, setActiveReque
 
   return (
     <div style={{ maxWidth: '760px' }}>
+      {requestsError && (
+        <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: '10px', padding: '12px 14px', marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px', fontSize: '13px', color: '#78350f' }}>
+          <span>We could not load your progress details. Retrying now.</span>
+          <button onClick={onRetry} style={{ background: '#1B3A6B', color: '#fff', border: 'none', borderRadius: '8px', padding: '7px 14px', fontSize: '12px', fontWeight: '600', cursor: 'pointer', whiteSpace: 'nowrap' }}>Retry</button>
+        </div>
+      )}
       {open.length === 0 ? (
         <div style={{ background: '#fff', borderRadius: '12px', padding: '48px', textAlign: 'center', border: '1px solid #e5e7eb' }}>
           <div style={{ fontSize: '32px', marginBottom: '10px' }}>✅</div>

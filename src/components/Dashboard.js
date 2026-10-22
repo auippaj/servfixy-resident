@@ -477,6 +477,7 @@ function MyNeighborhood({ resident }) {
 // ── Main Dashboard ───────────────────────────────────────────────────────────
 function Dashboard({ resident, token, onLogout }) {
   const [requests, setRequests] = useState([]);
+  const [requestsError, setRequestsError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeRequest, setActiveRequest] = useState(null);
   const [rvcData, setRvcData] = useState(null);
@@ -502,6 +503,8 @@ function Dashboard({ resident, token, onLogout }) {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
+      if (!res.ok || !data.requests) throw new Error('requests unavailable');
+      setRequestsError(false);
       if (data.requests) {
         setRequests(data.requests);
         setActiveRequest(prev => {
@@ -512,6 +515,7 @@ function Dashboard({ resident, token, onLogout }) {
       }
     } catch (err) {
       console.error('Failed to fetch requests:', err);
+      setRequestsError(true);
     } finally {
       setLoading(false);
     }
@@ -526,6 +530,13 @@ function Dashboard({ resident, token, onLogout }) {
       console.error('Failed to fetch cases:', err);
     }
   }, [token]);
+
+  // Retry quickly while request details are unavailable so progress shows up on its own.
+  useEffect(() => {
+    if (!requestsError) return undefined;
+    const t = setTimeout(fetchRequests, 5000);
+    return () => clearTimeout(t);
+  }, [requestsError, fetchRequests]);
 
   useEffect(() => {
     fetchRequests();
@@ -741,7 +752,7 @@ function Dashboard({ resident, token, onLogout }) {
           {activeTab === 'requests' && (
             <CaseList cases={cases} requests={requests} doneStatuses={PAST_STATUSES}
               activeRequest={activeRequest} setActiveRequest={setActiveRequest}
-              token={token} loading={loading} onStart={() => setActiveTab('home')} />
+              token={token} loading={loading} requestsError={requestsError} onRetry={fetchRequests} onStart={() => setActiveTab('home')} />
           )}
 
           {activeTab === 'submit' && (

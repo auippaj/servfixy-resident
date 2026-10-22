@@ -2,11 +2,20 @@ import React from 'react';
 import LsStatusBanner from './LsStatusBanner';
 
 const TOUCH_LABELS = [
-  'Request acknowledged',
-  'Tech assigned',
-  'En route',
-  'Completion summary',
-  'Survey sent'
+  'Request received',
+  'Technician assigned',
+  'Technician on the way',
+  'Work completed',
+  'Feedback requested'
+];
+
+// What the resident is waiting on next, based on the furthest step reached.
+const NEXT_UP = [
+  'We are reviewing your request',
+  'Waiting for a technician to be assigned',
+  'Technician assigned, visit coming up',
+  'Technician is on the way',
+  'Work is complete, we will ask how it went'
 ];
 
 const STATUS_COLORS = {
@@ -74,8 +83,11 @@ function RequestCard({ request, active, onClick, past, token }) {
       {!past && (
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-            <div style={{ fontSize: '11px', color: '#9ca3af' }}>5-touch tracker</div>
-            <div style={{ fontSize: '11px', color: '#14B8A6', fontWeight: '600' }}>{firedTouches.length}/5 complete</div>
+            <div style={{ fontSize: '11px', color: '#9ca3af' }}>Progress</div>
+            <div style={{ fontSize: '11px', color: '#14B8A6', fontWeight: '600' }}>{firedTouches.length}/5 steps</div>
+          </div>
+          <div style={{ fontSize: '12px', fontWeight: '600', color: '#1B3A6B', marginBottom: '8px' }}>
+            Right now: {firedTouches.length >= 5 ? 'All done, thank you' : NEXT_UP[Math.max(0, ...firedTouches)]}
           </div>
           <div style={{ height: '4px', background: '#f0f0f0', borderRadius: '2px', marginBottom: '8px', overflow: 'hidden' }}>
             <div style={{ height: '100%', width: `${(firedTouches.length/5)*100}%`, background: '#14B8A6', borderRadius: '2px', transition: 'width 0.3s' }} />
@@ -91,7 +103,7 @@ function RequestCard({ request, active, onClick, past, token }) {
                     background: fired ? '#14B8A6' : '#e5e7eb'
                   }} />
                   <span style={{ fontSize: '11px', color: fired ? '#374151' : '#9ca3af' }}>
-                    Touch {num} — {label}
+                    {label}
                   </span>
                   {fired && (
                     <span style={{ fontSize: '10px', color: '#14B8A6', marginLeft: 'auto' }}>✓</span>
