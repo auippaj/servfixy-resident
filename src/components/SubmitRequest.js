@@ -111,6 +111,7 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
   const [listening, setListening] = useState(false);
   const [photos, setPhotos] = useState([]);
   const [phone, setPhone] = useState(resident.phone || '');
+  const [smsConsent, setSmsConsent] = useState(false);
   const [isUrgent, setIsUrgent] = useState(false);
   const [issueType, setIssueType] = useState('');
 
@@ -183,7 +184,8 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
           location_spot: locationData?.location_spot || null,
           location_pin_x: locationData?.location_pin_x || null,
           location_pin_y: locationData?.location_pin_y || null,
-          resident_phone: phone || null
+          resident_phone: phone || null,
+          sms_consent: !!phone.trim() && smsConsent
         })
       });
       const data = await res.json();
@@ -262,6 +264,15 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
           placeholder="+1 (555) 000-0000"
           style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: '8px', padding: '9px 12px', fontSize: '13px', boxSizing: 'border-box' }}
         />
+        <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginTop: '8px', fontSize: '12px', color: '#6b7280', cursor: 'pointer' }}>
+          <input
+            type="checkbox"
+            checked={smsConsent}
+            onChange={e => setSmsConsent(e.target.checked)}
+            style={{ marginTop: '2px' }}
+          />
+          <span>Text me updates about this request. Message and data rates may apply. Reply STOP to opt out.</span>
+        </label>
       </div>
 
       <div>
