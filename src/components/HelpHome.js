@@ -33,9 +33,9 @@ export function suggestLane(text) {
 function followUpMessage(lane, followUp) {
   const when = followUp === 'today' ? 'today' : 'the next business day';
   if (lane === 'community') {
-    return `We hear you, and we're sorry this is happening. Our Resident Success team will reach out to you ${when}, and we'll make sure your concerns are heard and escalated to the proper team member for resolution.`;
+    return `We hear you, and we're sorry this is happening. Our Resident Support team will reach out to you ${when}, and we'll make sure your concerns are heard and escalated to the proper team member for resolution.`;
   }
-  if (lane === 'account') return `Thanks for reaching out. Our Resident Success team will reach out to you ${when}.`;
+  if (lane === 'account') return `Thanks for reaching out. Our Resident Support team will reach out to you ${when}.`;
   return 'We will keep you updated in My Requests.';
 }
 
