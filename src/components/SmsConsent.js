@@ -31,7 +31,7 @@ function SmsConsent() {
             2. To report a maintenance problem, the resident opens the request form, which has an optional
             <strong> Mobile number</strong> field.<br />
             3. Below that field is a checkbox, <strong>unchecked by default</strong>. Text updates are sent only if the
-            resident enters a mobile number and selects the checkbox. Submitting a request does <strong>not</strong>
+            resident enters a mobile number and selects the checkbox. Submitting a request does <strong>not</strong>{' '}
             require it.<br />
             4. The resident's choice is saved with the request, with the date and time, and Servfixy sends text updates
             for that request only when consent was given.
