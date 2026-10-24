@@ -12,7 +12,7 @@ function SmsConsent() {
     <div style={{ minHeight: '100vh', background: '#f3f4f6', padding: '32px 16px', fontFamily: 'Arial, sans-serif' }}>
       <div style={{ maxWidth: '680px', margin: '0 auto' }}>
         <h1 style={{ fontSize: '24px', color: '#1B3A6B', margin: '0 0 4px' }}>Servfixy SMS Text Message Program</h1>
-        <p style={{ ...p, color: '#6b7280' }}>How residents opt in to receive text messages from Servfixy.</p>
+        <p style={{ ...p, color: '#6b7280' }}>How residents opt in to receive text messages from Servfixy, sent on behalf of their community. Each message begins with the community's name.</p>
 
         <div style={card}>
           <h2 style={h2}>Who receives messages and why</h2>
@@ -40,7 +40,7 @@ function SmsConsent() {
           <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', background: '#ecfdf5', border: '1px solid #99f6e4', borderRadius: '8px', padding: '12px', fontSize: '13px', color: '#134e4a', lineHeight: 1.5 }}>
             <input type="checkbox" disabled checked={false} readOnly style={{ marginTop: '3px' }} aria-label="Example of the unchecked consent checkbox" />
             <span>
-              <strong>Optional:</strong> I agree to receive SMS text notifications from Servfixy about this maintenance
+              <strong>Optional:</strong> I agree to receive SMS text notifications from Servfixy, on behalf of my community, about this maintenance
               request and appointment confirmations. Message frequency varies (typically 1-5 messages per work order).
               Message and data rates may apply. Reply <strong>STOP</strong> to opt out at any time, <strong>HELP</strong> for
               assistance. Mobile information will not be shared with third parties for marketing. See our{' '}
@@ -55,7 +55,7 @@ function SmsConsent() {
 
         <div style={card}>
           <h2 style={h2}>Example messages</h2>
-          <p style={p}><strong>Enrollment confirmation:</strong> Servfixy: You are now enrolled to receive property maintenance notifications including work order updates and appointment confirmations. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for assistance.</p>
+          <p style={p}><strong>Enrollment confirmation:</strong> Crestview at Midtown: You are now enrolled to receive property maintenance notifications including work order updates and appointment confirmations. Msg frequency varies. Msg &amp; data rates may apply. Reply STOP to opt out, HELP for assistance.</p>
           <p style={p}><strong>Opt-out reply:</strong> You have successfully been unsubscribed. You will not receive any more messages from this number. Reply START to resubscribe.</p>
           <p style={p}><strong>Help reply:</strong> Reply STOP to unsubscribe. Msg&amp;Data Rates May Apply.</p>
         </div>
