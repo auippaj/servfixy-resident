@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import MicTextarea from './MicTextarea';
+import { EmergencyKeywordBanner } from './SafetyNotice';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -157,6 +158,7 @@ function HelpHome({ token, onPickHome, onPickPtp, onSeeRequests, onCaseCreated }
             ))}
           </div>
           <MicTextarea value={text} onChange={setText} placeholder="Tell us more (optional)" height={96} />
+          <EmergencyKeywordBanner text={text} />
           {view === 'community' && <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '8px' }}>🔒 Your name is never shared with a neighbor.</div>}
           {error && <div style={{ color: '#991b1b', fontSize: '13px', marginTop: '10px' }}>{error}</div>}
           <button onClick={submit} disabled={sending} style={{ ...primaryBtn, width: '100%', marginTop: '16px', opacity: sending ? 0.7 : 1 }}>{sending ? 'Sending...' : 'Send'}</button>
@@ -208,6 +210,7 @@ function HelpHome({ token, onPickHome, onPickPtp, onSeeRequests, onCaseCreated }
       <div style={{ ...card, marginTop: '20px' }}>
         <div style={{ fontSize: '15px', fontWeight: '700', color: '#111827', marginBottom: '10px' }}>Not sure? Tell us.</div>
         <MicTextarea value={text} onChange={setText} placeholder="Tell us what is going on" height={84} />
+        <EmergencyKeywordBanner text={text} />
         {error && <div style={{ color: '#991b1b', fontSize: '13px', marginTop: '8px' }}>{error}</div>}
         <button onClick={continueFromBox} style={{ ...primaryBtn, width: '100%', marginTop: '12px' }}>Continue</button>
       </div>
