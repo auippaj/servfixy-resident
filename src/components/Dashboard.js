@@ -7,7 +7,8 @@ import CaseList from './CaseList';
 import PTPPortal from './PTPPortal';
 
 const API_URL = process.env.REACT_APP_API_URL;
-const GOOGLE_KEY = 'AIzaSyB0HtcdGObY0irWO1sIUVT6e4hdcfdFkL0';
+// My Neighborhood is hidden until the Places key is set on the backend (see GitHub issue). Set REACT_APP_SHOW_NEIGHBORHOOD=true to show it again.
+const SHOW_NEIGHBORHOOD = process.env.REACT_APP_SHOW_NEIGHBORHOOD === 'true';
 const supabase = createClient(
   process.env.REACT_APP_SUPABASE_URL,
   process.env.REACT_APP_SUPABASE_ANON_KEY
@@ -44,16 +45,7 @@ function MyNeighborhood({ resident }) {
     if (!cat || places[categoryKey]) return;
     setLoading(true);
 
-    // Use Google Places Nearby Search via proxy to avoid CORS
-    // We call it through our backend to keep the API key server-side safe
-    const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${propertyCoords.lat},${propertyCoords.lng}&radius=2000&type=${cat.type.split('|')[0]}&key=${GOOGLE_KEY}`;
-
-    // Since we can't call Google directly from browser (CORS), use a text search approach
-    const textUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(cat.label + ' near ' + (resident.property_address || resident.property_name + ' Houston TX'))}&key=${GOOGLE_KEY}`;
-
-    // Fallback: use Google Maps Embed or Places JS API approach
-    // For now build cards from a structured mock that we'll replace with real API
-    // We'll use the Nearby Search through the backend proxy
+    // Results come from our backend, which keeps the Google key server-side.
     fetch(`${process.env.REACT_APP_API_URL}/api/neighborhood?type=${encodeURIComponent(cat.type)}&property_name=${encodeURIComponent(resident.property_name || 'Houston TX')}`)
       .then(r => r.json())
       .then(data => {
@@ -297,7 +289,7 @@ function Dashboard({ resident, token, onLogout }) {
   const navItems = [
     { key: 'home', label: 'How can we help?', icon: '🙋' },
     { key: 'requests', label: 'My Requests', icon: '📋' },
-    { key: 'neighborhood', label: 'My Neighborhood', icon: '🏘️' },
+    ...(SHOW_NEIGHBORHOOD ? [{ key: 'neighborhood', label: 'My Neighborhood', icon: '🏘️' }] : []),
   ];
 
   const pageTitle = {
@@ -479,7 +471,7 @@ function Dashboard({ resident, token, onLogout }) {
 
           {activeTab === 'ptp' && <PTPPortal resident={resident} token={token} />}
 
-          {activeTab === 'neighborhood' && <MyNeighborhood resident={resident} />}
+          {SHOW_NEIGHBORHOOD && activeTab === 'neighborhood' && <MyNeighborhood resident={resident} />}
 
         </div>
       </div>
