@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FloorplanPicker from './FloorplanPicker';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -101,6 +101,18 @@ const TIME_OPTIONS = [
 ];
 
 function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }) {
+  // When the property will follow up: 'today' or 'next_business_day'. The server decides (property-local cutoff).
+  // If it cannot be read, say the more cautious one.
+  const [followUp, setFollowUp] = useState(null);
+  useEffect(() => {
+    let live = true;
+    fetch(`${API_URL}/api/cases/follow-up`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => (r.ok ? r.json() : Promise.reject(new Error('bad'))))
+      .then(d => { if (live) setFollowUp(d.follow_up === 'today' ? 'today' : 'next_business_day'); })
+      .catch(() => { if (live) setFollowUp('next_business_day'); });
+    return () => { live = false; };
+  }, [token]);
+
   const [category, setCategory] = useState('');
   const [locationData, setLocationData] = useState(null);
   const [locationConfirmed, setLocationConfirmed] = useState(false);
@@ -463,7 +475,7 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
       )}
 
       <div style={{ fontSize: '11px', color: '#9ca3af', textAlign: 'center' }}>
-        We'll contact you within 1 hour and send your verification code.
+        {followUp && `We'll follow up ${followUp === 'today' ? 'today' : 'the next business day'}. Your verification code appears in My Requests once a technician is assigned.`}
       </div>
     </div>
   );
