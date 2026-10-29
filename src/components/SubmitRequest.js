@@ -118,6 +118,8 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
   const [locationData, setLocationData] = useState(null);
   const [locationConfirmed, setLocationConfirmed] = useState(false);
   const [description, setDescription] = useState(initialDescription || '');
+  const [entryPermission, setEntryPermission] = useState('');
+  const [pets, setPets] = useState([]); // ['none'] or any of dog, cat, other
   const [preferredTime, setPreferredTime] = useState('Any time — urgent');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -190,6 +192,8 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
           category,
           description,
           preferred_time: preferredTime,
+          entry_permission: entryPermission || null,
+          pets_in_unit: pets.length ? pets : null,
           issue_type: issueType || null,
           location_room: locationData?.location_room || null,
           location_spot: locationData?.location_spot || null,
@@ -232,6 +236,8 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
       setLocationConfirmed(false);
       setDescription('');
       setPreferredTime('Any time — urgent');
+      setEntryPermission('');
+      setPets([]);
       setPhotos([]);
       onSubmit(data.request, data.rvc_code);
     } catch (err) {
@@ -422,6 +428,40 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
                 <input type="file" accept="image/*" multiple onChange={handlePhotoAdd} style={{ display: 'none' }} />
               </label>
             )}
+          </div>
+        </div>
+      )}
+
+      {locationConfirmed && (
+        <div>
+          <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>If you are not home, may we enter?</label>
+          <select
+            value={entryPermission}
+            onChange={e => setEntryPermission(e.target.value)}
+            style={{ width: '100%', border: '1px solid #d1d5db', borderRadius: '8px', padding: '9px 12px', fontSize: '13px' }}
+          >
+            <option value="">Choose one (optional)</option>
+            <option value="enter_if_not_home">Yes, you may enter if I am not home</option>
+            <option value="call_first">Call me before entering</option>
+            <option value="must_be_home">No, I need to be home</option>
+          </select>
+        </div>
+      )}
+
+      {locationConfirmed && (
+        <div>
+          <div style={{ fontSize: '13px', fontWeight: '500', color: '#374151', marginBottom: '4px' }}>Any pets in the home? (optional)</div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {[['none', 'No pets'], ['dog', 'Dog'], ['cat', 'Cat'], ['other', 'Other']].map(([key, label]) => {
+              const on = pets.includes(key);
+              return (
+                <button type="button" key={key} aria-pressed={on}
+                  onClick={() => setPets(prev => key === 'none' ? (on ? [] : ['none']) : (prev.includes(key) ? prev.filter(x => x !== key) : [...prev.filter(x => x !== 'none'), key]))}
+                  style={{ padding: '8px 14px', borderRadius: '20px', fontSize: '13px', cursor: 'pointer', border: on ? '1.5px solid #14B8A6' : '1px solid #d1d5db', background: on ? '#E6F7F4' : 'white', color: on ? '#0F6E56' : '#374151' }}>
+                  {label}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
