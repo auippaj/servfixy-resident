@@ -1,5 +1,6 @@
 import React from 'react';
 import LsStatusBanner from './LsStatusBanner';
+import { RESIDENT_STATUS, residentStatusKey, isEnRoute, isVisitOver, isStale } from '../residentStatus';
 
 const TOUCH_LABELS = [
   'Request received',
@@ -18,18 +19,16 @@ const NEXT_UP = [
   'Work is complete, we will ask how it went'
 ];
 
-const STATUS_COLORS = {
-  'Submitted': { bg: '#e6f1fb', text: '#185FA5' },
-  'Assigned': { bg: '#e6f1fb', text: '#185FA5' },
-  'In Progress': { bg: '#faeeda', text: '#633806' },
-  'Completed': { bg: '#e1f5ee', text: '#0F6E56' },
-  'Closed': { bg: '#f3f4f6', text: '#6b7280' }
-};
-
 function RequestCard({ request, active, onClick, past, token }) {
-  const colors = STATUS_COLORS[request.status] || STATUS_COLORS['Submitted'];
   const touchpoints = request.touchpoints || [];
   const firedTouches = touchpoints.map(t => t.touch_number);
+  const statusInfo = RESIDENT_STATUS[residentStatusKey(request.status)];
+  const visitOver = isVisitOver(request.status);
+  const enRoute = !past && !visitOver && (isEnRoute(request.status) || (firedTouches.includes(3) && !firedTouches.includes(4)));
+  // A technician is on the job only once one is assigned, on the way, or checked in.
+  const techAssigned = firedTouches.includes(2) || isEnRoute(request.status) || !!request.tech_checked_in;
+  const showCode = !!request.rvc_code && !past && !visitOver && techAssigned;
+  const stale = isStale(request, firedTouches, past);
 
   return (
     <div
@@ -53,13 +52,13 @@ function RequestCard({ request, active, onClick, past, token }) {
             {new Date(request.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
           </div>
         </div>
-        <span style={{ fontSize: '11px', fontWeight: '500', padding: '3px 8px', borderRadius: '20px', background: colors.bg, color: colors.text, whiteSpace: 'nowrap' }}>
-          {request.status}
+        <span style={{ fontSize: '11px', fontWeight: '500', padding: '3px 8px', borderRadius: '20px', background: statusInfo.bg, color: statusInfo.text, whiteSpace: 'nowrap' }}>
+          {statusInfo.label}
         </span>
       </div>
 
-      {/* En route ETA badge */}
-      {request.status === 'En route' || request.status === 'in_progress' ? (
+      {/* En route ETA badge: only while the technician is actually on the way */}
+      {enRoute ? (
         <div style={{ background: 'linear-gradient(135deg, #14B8A6, #0F9B85)', borderRadius: '8px', padding: '8px 12px', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '16px' }}>🚗</span>
           <div>
@@ -71,6 +70,13 @@ function RequestCard({ request, active, onClick, past, token }) {
 
       {/* Life Safety status (flagged requests only) */}
       {!past && token && request.life_safety_flag && request.ls_flagged_at && <LsStatusBanner request={request} token={token} />}
+
+      {/* Waiting too long with no technician assigned */}
+      {stale && (
+        <div style={{ background: '#fffbeb', border: '1px solid #fcd34d', borderRadius: '8px', padding: '8px 12px', marginBottom: '10px', fontSize: '12px', color: '#78350f', lineHeight: 1.5 }}>
+          This is taking longer than expected. We are sorry for the wait.
+        </div>
+      )}
 
       {/* Description */}
       {request.description && (
@@ -116,15 +122,15 @@ function RequestCard({ request, active, onClick, past, token }) {
       )}
 
       {/* RVC code */}
-      {request.rvc_code && !past && (
+      {showCode && (
         <div style={{ marginTop: '10px', background: '#1B3A6B', borderRadius: '8px', padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.6)' }}>Verification code</span>
           <span style={{ fontSize: '16px', fontWeight: '500', color: '#fff', letterSpacing: '0.08em' }}>{request.rvc_code}</span>
         </div>
       )}
 
-      {/* Video call button — activates when tech checks in */}
-      {!past && (
+      {/* Video call button: hidden until a tech is assigned, and again once the visit is over */}
+      {!past && !visitOver && techAssigned && (
         <div style={{ marginTop: '10px' }}>
           {request.tech_checked_in ? (
             <button

@@ -13,7 +13,7 @@ const supabase = createClient(
   process.env.REACT_APP_SUPABASE_ANON_KEY
 );
 
-const PAST_STATUSES = ['completed', 'Completed', 'closed', 'Closed', 'resident_confirmed'];
+const PAST_STATUSES = ['completed', 'Completed', 'closed', 'Closed', 'resident_confirmed', 'cancelled', 'Cancelled', 'canceled', 'Canceled'];
 
 // ── My Neighborhood ──────────────────────────────────────────────────────────
 const CATEGORIES = [

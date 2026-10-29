@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import FloorplanPicker from './FloorplanPicker';
+import { Emergency911Notice, EmergencyKeywordBanner } from './SafetyNotice';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -258,6 +259,8 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
         </div>
       )}
 
+      <Emergency911Notice />
+
       <div>
         <label style={{ fontSize: '13px', fontWeight: '500', color: '#374151', display: 'block', marginBottom: '4px' }}>Unit number</label>
         <div style={{ border: '1px solid #e5e7eb', borderRadius: '8px', padding: '9px 12px', fontSize: '13px', color: '#6b7280', background: '#F0F4F8' }}>
@@ -408,6 +411,7 @@ function SubmitRequest({ token, resident, onSubmit, initialDescription, onBack }
           <div style={{ textAlign: 'right', fontSize: '11px', color: description.length < 20 ? '#9ca3af' : '#14B8A6', marginTop: '4px' }}>
             {description.length} chars {description.length < 20 ? `(${20 - description.length} more to unlock submit)` : '✓'}
           </div>
+          <EmergencyKeywordBanner text={`${issueType} ${description}`} />
           <button
             onClick={startListening}
             disabled={listening}
